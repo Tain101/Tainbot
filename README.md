@@ -1,0 +1,2 @@
+# Tainbot
+personal discord bot

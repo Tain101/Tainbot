@@ -1,10 +1,14 @@
+//running using 'forever' package
+
 "use strict";
 require('./owStats.js')(); //http://stackoverflow.com/a/28066576
+require('./gameRoles.js')();
 
 var Discord = require("discord.js");
 var Auth    = require('./auth.json');
 // var owStats = owStats || {};
-var mybot = new Discord.Client();
+
+var mybot = new Discord.Client({autoReconnect:true});
 mybot.loginWithToken(Auth.token);
 
 mybot.on("ready", function() {
@@ -26,7 +30,10 @@ mybot.on("message", function(message) {
     switch (key) {
         case "ping":
             //TODO return bot's ping
-            mybot.sendMessage(message, "!pong");
+            if(message.author.id === "108322020822913024"){
+                mybot.sendMessage(message, "!pong");
+                console.log("!pong");
+            }
             break;
         case "game":
             moveUsersToGame(message);
@@ -35,6 +42,24 @@ mybot.on("message", function(message) {
             var messageToSend = owStats(message, args);
             if(str){
                 mybot.sendMessage(message, messageToSend);
+            }
+            break;
+        case "role":
+            var messageToSend = gameRole(mybot, message, args);
+            if(str){
+                mybot.sendMessage(message, messageToSend);
+            }
+            break;
+        case "setGame":
+
+            console.log(message.author.id);
+
+            if(message.author.id === "108322020822913024"){
+                console.log("setGame " + args.join(' '));
+
+                mybot.setPlayingGame(args.join(' '), function (err) {
+                    if(err){console.log("err: \n    " + err);}
+                });
             }
             break;
         default:
@@ -53,26 +78,32 @@ mybot.on("message", function(message) {
 function moveUsersToGame(message) {
     let messageToSend = ""; // message to send in response
     let game = message.author.game; // game user is playing
+    let server = message.server;
 
     if (game !== null) {
 
         messageToSend += message.author + " is currently playing: " + game.name + "\n";
         messageToSend += "These players are  playing " + game.name + ":\n";
         messageToSend += "```" + "\n";
-
-        let userList = mybot.users.getAll("game", game);
-        for (let i = 0; i < userList.length; i++) {
-            messageToSend += userList[i].name;
+        let userList = [];
+        for (var i = 0; i < server.members.length; i++) {
+            if(server.members[i].game){
+                if(game.name === server.members[i].game.name){
+                    userList.push(server.members[i]);
+                    messageToSend += server.members[i].name + "\n";
+                }
+            }
         }
 
         messageToSend += "```" + "\n";
 
-        let gameChannel = mybot.channels.get("name", game.name);
+        let gameChannels = server.channels.getAll("name", game.name.toLowerCase());
+        let gameChannel = gameChannels.get("type", "voice");
         if (gameChannel !== null) {
-            messageToSend += "I found this channel: " + gameChannel + "\n";
+            messageToSend += "I found this channel: `" + gameChannel.name + "`\n";
             for (let i = 0; i < userList.length; i++) {
                 mybot.moveMember(userList[i], gameChannel, (function(err) {
-                    if (err) console.error("err:" + err);
+                    if (err) console.error("err: \n     " + err);
                 }));
             }
         }
@@ -94,3 +125,14 @@ function getArgs(stringArr) {
     }
     return stringArr;
 }
+
+function checkForUpdate() {
+    //returns true once a day
+    var date = new Date();
+    if(date.getUTCHours() === 11){
+        console.log("time to update stats!");
+        updateOwStats();
+    }
+}
+
+setInterval(function () {checkForUpdate();}, 1000*60*60);

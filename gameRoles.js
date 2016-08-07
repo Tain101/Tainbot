@@ -7,11 +7,12 @@ module.exports = function() {
             return "Try again!";
         }
 
-        var server = message.server;
-        var channel = message.channel;
-        var roles = server.roles;
+        var server     = message.server;
+        var channel    = message.channel;
+        var roles      = server.roles;
         var roleString = args[1].toLowerCase();
-        var role = null;
+        var role       = null;
+
         for (var i = 0; i < roles.length; i++) {
             if(roles[i].name.toLowerCase() === roleString){
                 role = roles[i];

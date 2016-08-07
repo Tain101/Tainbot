@@ -6,9 +6,8 @@ require('./gameRoles.js')();
 
 var Discord = require("discord.js");
 var Auth    = require('./auth.json');
-// var owStats = owStats || {};
 
-var mybot = new Discord.Client({autoReconnect:true});
+var mybot   = new Discord.Client({autoReconnect:true});
 mybot.loginWithToken(Auth.token);
 
 mybot.on("ready", function() {
@@ -21,6 +20,7 @@ mybot.on("message", function(message) {
         return;
     }
     str = str.substr(1);//remove '!'
+
     let strArray = str.split(' '); //make array of words
     let key      = strArray.shift(); //first word is key
     let args     = getArgs(strArray); // the rest are arguments
@@ -28,11 +28,19 @@ mybot.on("message", function(message) {
     console.log(args + '\n');
 
     switch (key) {
+        case "help":
+            break;
         case "ping":
             //TODO return bot's ping
             if(message.author.id === "108322020822913024"){
                 mybot.sendMessage(message, "!pong");
                 console.log("!pong");
+            }
+            break;
+
+        case "updateOW":
+            if(message.author.id === "108322020822913024"){
+                updateOwStats();
             }
             break;
         case "game":
@@ -130,7 +138,7 @@ function checkForUpdate() {
     //returns true once a day
     var date = new Date();
     if(date.getUTCHours() === 11){
-        console.log("time to update stats!");
+
         updateOwStats();
     }
 }

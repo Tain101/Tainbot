@@ -2,7 +2,7 @@
 
 module.exports = function() {
     // "use strict";
-    var fs = require('fs'); //filesystem
+    var fs      = require('fs'); //filesystem
     var request = require('request');
 
     this.owStats = function(message, args) {
@@ -43,12 +43,20 @@ module.exports = function() {
     }
 
     this.updateOwStats = function (){
+        console.log("time to update stats!");
         var owStatsJson = null;
         var data = fs.readFileSync("owStatsJson.json", "utf8");
         owStatsJson = JSON.parse(data);
 
-        for (var obj in owStatsJson){
+        for (var user in owStatsJson){
             request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user]  + "/refresh", function callback(err, httpResponse, body){
+                if(err){
+                    console.log("err: " + err);
+                    console.log("httpResponse: " + httpResponse);
+                    console.log("body: " + body);
+                }
+            });
+            request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user]  + "/refresh", function callback(err, httpResponse, body){
                 if(err){
                     console.log("err: " + err);
                     console.log("httpResponse: " + httpResponse);
@@ -60,3 +68,7 @@ module.exports = function() {
         now = Date.now();
     }
 };
+/**
+ * http://masteroverwatch.com/profile/pc/us/Tain-1600
+ */
+

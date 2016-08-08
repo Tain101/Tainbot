@@ -1,21 +1,23 @@
 //running using 'forever' package
 
 "use strict";
-require('./owStats.js')(); //http://stackoverflow.com/a/28066576
-require('./gameRoles.js')();
-
 var Discord = require("discord.js");
 var Auth    = require('./auth.json');
 
 var mybot   = new Discord.Client({autoReconnect:true});
 mybot.loginWithToken(Auth.token);
 
+require('./Commands.js')();//http://stackoverflow.com/a/28066576
+require('./owStats.js')();
+require('./gameRoles.js')();
+
 mybot.on("ready", function() {
     console.log("ready!\n");
 });
 
 mybot.on("message", function(message) {
-    if (message.content[0] !== "!") { //if 1st char isn't '!' return
+    if (message.content[0] !== "!" ||   //if 1st char isn't '!' return
+        message.author.bot) {                  //or if sender is a bot
         return;
     }
     handleMessage(message);
@@ -23,19 +25,45 @@ mybot.on("message", function(message) {
 
 function handleMessage(message) {
     let strArray = message.content.split(' '); //make array of words
-    let key      = strArray.shift(); //first word is key
+    let key      = strArray.shift().substr(1); //first word is key
     let args     = getArgs(strArray); // the rest are arguments
     console.log(key);
     console.log(args + '\n');
 
-    for (var command in CommandList){
-        if(command.key === key){
-            if(command.checkPermissions(message.author)){
-                return command.call(message, key, args);
+    for (var command in Commands){
+        if(key === command){
+            if(checkPermissions(mybot, message, message.author, Commands[command].permissionLevel)){
+                return Commands[command].call(mybot, message, args);
             }
         }
     }
     return false;
+}
+
+function checkPermissions(bot, message, user, role) {
+    if(role === undefined){
+        return true;
+    }
+    if(!user){
+        return false;
+    }
+    if(typeof(user) === "string"){
+        user = message.server.users.get("id", user);
+    }
+    if(typeof(role) === "string"){
+        role = message.server.roles.get("name", role);
+    }
+
+    user = message.channel.permissionsOf(user);
+
+    for (var perm in Discord.Constants.Permissions) {
+        if(role.hasPermission(Discord.Constants.Permissions[perm]) &&
+            !user.hasPermission(Discord.Constants.Permissions[perm])){
+            return false;
+        }
+    }
+
+    return true;
 }
 
 
@@ -108,3 +136,98 @@ function checkForUpdate() {
 }
 
 setInterval(function () {checkForUpdate();}, 1000*60*60);
+
+var Commands = {
+        "help": {
+            description: "You're lookin' at it.",
+            call: function(bot, message, args) {
+                let helpMessage = "";
+                if(!args){
+                    for (var command in Commands) {
+                        if (checkPermissions(mybot, message, message.author, Commands[command].permissionLevel)) {
+                            helpMessage += "!" + command + " -\n";
+                            if(Commands[command].description){
+                                helpMessage += "``` " + Commands[command].description + " ```\n";
+                            }
+                        }
+                    }
+                }
+                else{
+                    for (var i = 0; i < args.length; i++) {
+                        if(Commands[args[i]] &&
+                            checkPermissions(mybot, message, message.author, Commands[args[i]].permissionLevel))
+                        {
+                            helpMessage += "!" + args[i] + " -\n";
+                            if(Commands[args[i]].description){
+                                helpMessage += "```" + Commands[args[i]].description + "```\n";
+                            }
+                        }
+                        else{
+                            helpMessage += "invalid command!";
+                        }
+                    }
+                }
+
+                bot.sendMessage(message.channel, helpMessage);
+                return true;
+            },
+        },
+        "owStat": {
+            description: "get overbuff page for a user. \n" +
+                         "use @user to request a given user.\n" +
+                         "use set bnet#0000 to link your account.\n" +
+                         "linking you account will update your overbuff page daily!",
+            call: function(bot, message, args) {
+                return owStats(message, args);
+            },
+        },
+        "role": {
+            description: "!role join -  join the role!\n" +
+                         "!role leave - leave the role!\n" +
+                         "!role list - list the members!",
+            call: function(bot, message, args) {
+                return gameRole(bot, message, args);
+            },
+        },
+        "game": {
+            description: "move you and players to apropriate voice channel (WIP)",
+            permissionLevel: "Mod",
+            call: function(bot, message, args) {
+                return moveUsersToGame(message);
+            },
+        },
+        "ping": {
+            description: "pong",
+            permissionLevel: "Admin",
+            call: function(bot, message, args) {
+                bot.sendMessage(message, "!pong");
+                console.log("!pong");
+                return true;
+            },
+        },
+        "updateOW": {
+            description: "forces update of overbuff pages",
+            permissionLevel: "Admin",
+            call: function(bot, message, args) {
+                return updateOwStats();
+            },
+        },
+        "setGame": {
+            description: "set's the game I play!",
+            permissionLevel: "Admin",
+            call: function(bot, message, args) {
+                console.log(message.author.id);
+                console.log("setGame " + args.join(' '));
+                let flag = true;
+
+                bot.setPlayingGame(args.join(' '), function(err) {
+                    if (err) {
+                        console.log("err:{ \n    " + err);
+                        flag = false;
+                    }
+                });
+
+                return flag;
+            },
+        },
+    };

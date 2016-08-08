@@ -4,7 +4,8 @@ module.exports = function() {
 
     this.gameRole = function(mybot, message, args) {
         if(!args[0] || !args[1]){
-            return "Try again!";
+            mybot.sendMessages("Try again!");
+            return false;
         }
 
         var server     = message.server;
@@ -20,12 +21,14 @@ module.exports = function() {
             }
         }
         if(!role){
-            return "I couldn't find that role!";
+            mybot.sendMessages("I couldn't find that role!");
+            return false;
         }
         var userPerms = channel.permissionsOf(message.author);
 
         if(!checkPermissions(userPerms, role)){
-            return "You aren't powerful enough for this role!";
+            mybot.sendMessages("You aren't powerful enough for this role!");
+            return false;
         }
         if(args[0] === "join"){
             mybot.addMemberToRole(message.author, role, function(error){
@@ -46,9 +49,12 @@ module.exports = function() {
             }
 
             message += "```\n";
-            return message;
+            mybot.sendMessages(message);
+            return true;
         } else {
-            return "You need to let me know if you want to leave or join!";
+            mybot.sendMessages("You need to let me know if you want to leave or join!");
+            return false;
+
         }
 
     };

@@ -41,6 +41,8 @@ function handleMessage(message) {
 }
 
 function checkPermissions(bot, message, user, role) {
+    console.log("checking Permissions of: " + user);
+    console.log("against role: " + role);
     if(role === undefined){
         return true;
     }
@@ -54,11 +56,13 @@ function checkPermissions(bot, message, user, role) {
         role = message.server.roles.get("name", role);
     }
 
-    user = message.channel.permissionsOf(user);
-
+    user = message.channel.permissionsOf(message.author);
+    console.log(user.serialize());
     for (var perm in Discord.Constants.Permissions) {
-        if(role.hasPermission(Discord.Constants.Permissions[perm]) &&
-            !user.hasPermission(Discord.Constants.Permissions[perm])){
+        let roleHasPerm = role.hasPermission(perm);
+        let userHasPerm = user.hasPermission(perm);
+        console.log(perm);
+        if( roleHasPerm && !userHasPerm){
             return false;
         }
     }

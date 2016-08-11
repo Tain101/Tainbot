@@ -1,4 +1,7 @@
 //running using 'forever' package
+//TODO let x = fun
+//  or fun x() ?
+
 
 "use strict";
 var Discord   = require("discord.js");
@@ -42,20 +45,11 @@ function handleMessage(message) {
     console.log("key: " + key);
     console.log("args: " + args);
 
-    console.log("   looking for command:")
-    for (var command in commList){
-        console.log("   looking at: " + command);
-        if(key === command){
-            console.log("       found command: " + command);
-            console.log("       checking permissions: ");
-            if(Commands.checkPermissions(message, message.author, commList[command].permissionLevel)){
-                console.log("           perms are good, executing command!");
-                commList[command].call(message, args);
-            }
+    if(commList[key]){
+        if(Commands.checkPermissions(message, message.author, commList[key].permissionLevel)){
+                commList[key].call(message, args);
         }
     }
-
-    console.log("==========");
 }
 
 /**

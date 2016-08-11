@@ -16,7 +16,7 @@ let Reminder = function (time, message, channel, verify) {
     this.timeout = null;
 
     this.checkSetTimeout = function () {
-        let now = new Date.getTime();
+        let now = new Date().getTime();
         let duration = this.time - now;
         if(duration < MIN_TIMEOUT_DUR && !timeout){
             timeout = setTimeout(this.trigger, duration);
@@ -28,25 +28,81 @@ let Reminder = function (time, message, channel, verify) {
         deleteReminder(this);
     };
 
-    this.save = function () {
-        deleteReminder(this);//delete all previous entries for this reminder so user can update.
-        reminderList.push(this);
-        fs.writeFileSync(REMINDER_FILE, JSON.stringify(reminderList), "utf8");
+    this.copy = function (reminder) {
+        this.time    = reminder.time;
+        this.message = reminder.message;
+        this.channel = reminder.channel;
+        this.verify  = reminder.verify;
+        this.timeout = reminder.timeout;
     }
+
+}
+
+function saveReminder(reminder){
+    deleteReminder(reminder);//delete all previous entries for this reminder so user can upDate().
+    reminderList.push(reminder);
+    console.log("writing:");
+    console.log(reminderList);
+    fs.writeFileSync(REMINDER_FILE, JSON.stringify(reminderList), "utf8");
+}
+
+//returns string based on elements surrounded by ""
+let getMessage = function (stringArr) {
+    let startIndex = -1;
+    let endIndex   = -1;
+
+    for (var i = 0; i < stringArr.length; i++) {
+        if(stringArr[i] === "\""){
+            break;
+        }
+    }
+    startIndex = i;
+
+    for (var i = startIndex+1; i < stringArr.length; i++) {
+        if(stringArr[i] === "\""){
+            break;
+        }
+    }
+    endIndex = i;
+
+    if(startIndex === -1 ||
+        endIndex === -1){
+        return null;
+    }
+    let rtnStr = stringArr.slice(startIndex, endIndex+1).replace(",","");
+    return rtnStr;
+
 }
 
 let createReminder = function (message, args) {
+    if(!args){
+        return false;
+    }
+    args = args.join();
     var remindTime    = chrono.parse(args);
     var remindMessage = getMessage(args);
-    var remindChannel = message;
+    var remindChannel = message.channel.id;
     /*TODO:
     var remindVerify  = if(message.contains("-verify"));
     */
-    var reminder      = new Reminder(remindTime, remindMessage, remindChannel);
-    reminder.save();
-    reminder.checkSetInterval();
-}
+    if(!remindChannel){
+        console.log("Ive messed up and this doesnt make sense, no channel");
+        return false;
+    }
+    if(!remindTime){
+        console.log("I coulnd't parse that time!");
+        return false;
+    }
+    if(!remindMessage){
+        console.log("I coulding find the message you wanted me to remind u");
+        return false;
+    }
 
+    var reminder      = new Reminder(remindTime, remindMessage, remindChannel);
+    saveReminder(reminder);
+    reminder.checkSetTimeout();
+}
+this.createReminder = createReminder;
 
 this.loadReminders = function () {
     let data             = fs.readFileSync(REMINDER_FILE, "utf8");
@@ -54,8 +110,10 @@ this.loadReminders = function () {
     reminderList         = [];
 
     for(var reminder in reminderListJSON){
-        reminderList.push(reminder);
-        reminder.checkSetTimeout();
+        let newRem = new Reminder();
+        newRem.copy(reminder);
+        reminderList.push(newRem);
+        newRem.checkSetTimeout();
     }
 
 }

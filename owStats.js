@@ -36,6 +36,8 @@ let owStats = function(message, args) {
     }
 };
 
+this.owStats= owStats;
+
 function setOwStats(author, bnet) {
     var owStatsJson = null;
     var data        = fs.readFileSync(STAT_FILE, "utf8");
@@ -59,26 +61,26 @@ this.updateOwStats = function() {
         request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user] + "/refresh", function callback(err, httpResponse, body) {
             console.log(httpResponse.statusCode);
             if(err){
-                console.log("err: " + err);
+                console.log("err: "  + err);
                 console.log("body: " + body);
             }
         });
         request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user] + "/update", function callback(err, httpResponse, body) {
             console.log(httpResponse.statusCode);
             if(err){
-                console.log("err: " + err);
+                console.log("err: "  + err);
                 console.log("body: " + body);
             }
         });
     }
 
-    now = Date.now();
+    // now = new Date().getTime();
 }
 
  //returns true once a day
 function checkForStatsUpdate() {
     var date = new Date();
-    if (date.getUTCHours() === 11) {
+    if (Date().getUTCHours() === 11) {
 
         updateOwStats();
     }

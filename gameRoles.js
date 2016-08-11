@@ -1,8 +1,9 @@
 "use strict";
 let bot = global.bot;
+
 let gameRole = function(message, args) {
     if(!args[0] || !args[1]){
-        bot.sendMessages("Try again!");
+        bot.sendMessage("Try again!");
         return false;
     }
 
@@ -21,13 +22,13 @@ let gameRole = function(message, args) {
         }
     }
     if(!role){
-        bot.sendMessages("I couldn't find that role!");
+        bot.sendMessage("I couldn't find that role!");
         return false;
     }
 
     //verify user's permissions
     if(!checkPermissions(message, user, role)){
-        bot.sendMessages("You aren't powerful enough for this role!");
+        bot.sendMessage("You aren't powerful enough for this role!");
         return false;
     }
 
@@ -51,11 +52,12 @@ let gameRole = function(message, args) {
         }
 
         message += "```\n";
-        bot.sendMessages(message);
+        bot.sendMessage(message);
         return true;
     } else {
-        bot.sendMessages("You need to let me know if you want to leave or join!");
+        bot.sendMessage("You need to let me know if you want to leave or join!");
         return false;
 
     }
 };
+this.gameRole = gameRole;

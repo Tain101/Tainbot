@@ -11,31 +11,31 @@ let bot = global.bot;
 var Commands = {
         "help": {
             description: "You're lookin' at it.",
-            call: function(message, args){ helpMessageFunc()},
+            call: function(message, args){ helpMessageFunc(message, args)},
         },
         "owStat": {
             description: "get overbuff page for a user. \n" +
                          "use @user to request a given user.\n" +
                          "use set bnet#0000 to link your account.\n" +
                          "linking you account will update your overbuff page daily!",
-            call: function(message, args){ owStats.owStats()},
+            call: function(message, args){ owStats.owStats(message, args)},
         },
         "remind": {
             description: "HEAVY WIP!!!! \n" +
                          "returns a message to the user at a given time.",
-            call: function(message, args){ reminders.createReminder()},
+            call: function(message, args){ reminders.createReminder(message, args)},
 
         },
         "role": {
             description: "!role join -  join the role!\n" +
                          "!role leave - leave the role!\n" +
                          "!role list - list the members!",
-            call: function(message, args){ gameRoles.gameRole()},
+            call: function(message, args){ gameRoles.gameRole(message, args)},
         },
         "game": {
             description: "move you and players to apropriate voice channel (WIP)",
             permissionLevel: "Mod",
-            call: function(message, args){ moveUsersToGame()},
+            call: function(message, args){ moveUsersToGame(message, args)},
         },
         "ping": {
             description: "pong",
@@ -49,7 +49,7 @@ var Commands = {
         "updateOW": {
             description: "forces update of overbuff pages",
             permissionLevel: "Admin",
-            call: function(message, args){ owStats.updateOwStats()},
+            call: function(message, args){ owStats.updateOwStats(message, args)},
         },
         "setGame": {
             description: "set's the game I play!",
@@ -119,8 +119,8 @@ function helpMessageFunc(message, args) {
  */
 
 function checkPermissions(message, user, role) {
-    console.log("checking Permissions of: " + user);
-    console.log("against role: " + role);
+    // console.log("checking Permissions of: " + user);
+    // console.log("against role: " + role);
     if(role === undefined){
         return true;
     }
@@ -135,7 +135,7 @@ function checkPermissions(message, user, role) {
     }
 
     user = message.channel.permissionsOf(message.author);
-    console.log(user.serialize());
+    // console.log(user.serialize());
     for (var perm in Discord.Constants.Permissions) {
         let roleHasPerm = role.hasPermission(perm);
         let userHasPerm = user.hasPermission(perm);
@@ -158,8 +158,8 @@ this.checkPermissions = checkPermissions;
 
 function moveUsersToGame(message) {
     let messageToSend = ""; // message to send in response
-    let game = message.author.game; // game user is playing
-    let server = message.server;
+    let game          = message.author.game; // game user is playing
+    let server        = message.server;
 
     if (game !== null) {
 
@@ -179,7 +179,7 @@ function moveUsersToGame(message) {
         messageToSend += "```" + "\n";
 
         let gameChannels = server.channels.getAll("name", game.name.toLowerCase());
-        let gameChannel = gameChannels.get("type", "voice");
+        let gameChannel  = gameChannels.get("type", "voice");
         if (gameChannel !== null) {
             messageToSend += "I found this channel: `" + gameChannel.name + "`\n";
             for (let i = 0; i < userList.length; i++) {

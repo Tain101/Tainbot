@@ -2,8 +2,8 @@
 
 module.exports = function() {
     // "use strict";
-    var fs       = require('fs'); //filesystem
-    var request  = require('request');
+    var fs        = require('fs'); //filesystem
+    var request   = require('request');
     let STAT_FILE = "owStatsJson.json";
 
     this.owStats = function(message, args) {
@@ -11,7 +11,7 @@ module.exports = function() {
             if (!args[1]) {
                 mybot.sendMessage("you need to give me your bnet! try again.");
                 return false;
-            }else{
+            } else {
                 setOwStats(message.author, args[1]);
                 mybot.sendMessage("your bnet has been saved!");
                 return true;
@@ -36,8 +36,8 @@ module.exports = function() {
 
     function setOwStats(author, bnet) {
         var owStatsJson = null;
-        var data = fs.readFileSync(STAT_FILE, "utf8");
-        owStatsJson = JSON.parse(data);
+        var data        = fs.readFileSync(STAT_FILE, "utf8");
+        owStatsJson     = JSON.parse(data);
         console.log(owStatsJson);
 
         bnet = bnet.replace("#", "-");
@@ -47,22 +47,22 @@ module.exports = function() {
 
     }
 
-    this.updateOwStats = function (){
+    this.updateOwStats = function() {
         console.log("time to update stats!");
         var owStatsJson = null;
-        var data = fs.readFileSync(STAT_FILE, "utf8");
-        owStatsJson = JSON.parse(data);
+        var data        = fs.readFileSync(STAT_FILE, "utf8");
+        owStatsJson     = JSON.parse(data);
 
-        for (var user in owStatsJson){
-            request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user]  + "/refresh", function callback(err, httpResponse, body){
-                if(err){
+        for (var user in owStatsJson) {
+            request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user] + "/refresh", function callback(err, httpResponse, body) {
+                if (err) {
                     console.log("err: " + err);
                     console.log("httpResponse: " + httpResponse);
                     console.log("body: " + body);
                 }
             });
-            request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user]  + "/update", function callback(err, httpResponse, body){
-                if(err){
+            request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user] + "/update", function callback(err, httpResponse, body) {
+                if (err) {
                     console.log("err: " + err);
                     console.log("httpResponse: " + httpResponse);
                     console.log("body: " + body);
@@ -71,6 +71,16 @@ module.exports = function() {
         }
 
         now = Date.now();
+    }
+
+
+    function checkForStatsUpdate() {
+        //returns true once a day
+        var date = new Date();
+        if (date.getUTCHours() === 11) {
+
+            updateOwStats();
+        }
     }
 };
 /**

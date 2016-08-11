@@ -4,7 +4,7 @@ let REMINDER_FILE   = reminders.json;
 var fs     = require('fs');
 var chrono = require('chrono-node');
 
-this.createReminder = function (bot, message, args) {
+this.createReminder = function (message, args) {
     var remindTime    = chrono.parse(args);
     var remindMessage = getMessage(args);
     var remindChannel = message;
@@ -47,6 +47,7 @@ this.loadReminders = function () {
     reminderList = [];
     for(var reminder in reminderListJSON){
         reminderList.push(reminder);
+        reminder.checkSetTimeout();
     }
 
 }

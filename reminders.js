@@ -1,20 +1,13 @@
+"use strict";
 let MIN_TIMEOUT_DUR = 93600000;//26*60*60*1000 hours * minutes * millliseconds
-let REMINDER_FILE   = reminders.json;
+let REMINDER_FILE   = "reminders.json";
 
-var fs     = require('fs');
-var chrono = require('chrono-node');
+let fs     = require('fs');
+let chrono = require('chrono-node');
 
-this.createReminder = function (message, args) {
-    var remindTime    = chrono.parse(args);
-    var remindMessage = getMessage(args);
-    var remindChannel = message;
-    /*TODO:
-    var remindVerify = if(message.contains("-verify"));
-    */
-    var reminder = new Reminder(remindTime, remindMessage, remindChannel);
-    reminder.save();
-    reminder.checkSetInterval();
-}
+let bot          = global.bot;
+let reminderList = [];
+
 let Reminder = function (time, message, channel, verify = false) {
     let time    = time;
     let message = message;
@@ -41,22 +34,39 @@ let Reminder = function (time, message, channel, verify = false) {
     }
 }
 
-this.loadReminders = function () {
-    let data = fs.readFileSync(REMINDER_FILE, "utf8");
+let createReminder = function (message, args) {
+    var remindTime    = chrono.parse(args);
+    var remindMessage = getMessage(args);
+    var remindChannel = message;
+    /*TODO:
+    var remindVerify  = if(message.contains("-verify"));
+    */
+    var reminder      = new Reminder(remindTime, remindMessage, remindChannel);
+    reminder.save();
+    reminder.checkSetInterval();
+}
+
+
+let loadReminders = function () {
+    let data             = fs.readFileSync(REMINDER_FILE, "utf8");
     let reminderListJSON = JSON.parse(data);
-    reminderList = [];
+    reminderList         = [];
+
     for(var reminder in reminderListJSON){
         reminderList.push(reminder);
         reminder.checkSetTimeout();
     }
 
 }
-this.deleteReminder = function (reminder) {
+
+let deleteReminder = function (reminder) {
     let index = reminderList.findIndex(function (element) {
         return (reminder.time       === element.time &&
                 reminder.message    === element.message &&
                 reminder.channel    === element.channel);
     });
+
     reminderList.splice(index, 1);
     fs.writeFileSync(REMINDER_FILE, JSON.stringify(reminderList), "utf8");
+
 }

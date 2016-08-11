@@ -4,9 +4,10 @@
 var Discord  = require("discord.js");
 var Auth     = require('./auth.json');
 var Commands = require('./Commands.js');//http://stackoverflow.com/a/28066576
+var owStats  = require('./owStats.js');
 
 global.bot = new Discord.Client({autoReconnect:true});
-let bot = global.bot;
+let bot    = global.bot;
 bot.loginWithToken(Auth.token);
 
 bot.on("ready", function() {
@@ -33,13 +34,14 @@ function handleMessage(message) {
     let strArray = message.content.split(' '); //make array of words
     let key      = strArray.shift().substr(1); //first word is key
     let args     = getArgs(strArray); // the rest are arguments
+    let commList = Commands.Commands;
     console.log(key);
     console.log(args + '\n');
 
-    for (var command in Commands){
+    for (var command in commList){
         if(key === command){
-            if(checkPermissions(bot, message, message.author, Commands[command].permissionLevel)){
-                Commands[command].call(bot, message, args);
+            if(checkPermissions(bot, message, message.author, commList[command].permissionLevel)){
+                commList[command].call(bot, message, args);
             }
         }
     }
@@ -63,6 +65,6 @@ function getArgs(stringArr) {
 
 
 setInterval(function () {
-    checkForStatsUpdate();
-    loadReminders();
+    owStats.checkForStatsUpdate();
+    reminders.loadReminders();
 }, 60*60*1000);//once an hour * minute * milli

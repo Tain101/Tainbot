@@ -6,69 +6,31 @@ let gameRoles = require('./gameRoles.js')();
 var Commands = {
         "help": {
             description: "You're lookin' at it.",
-            call: function(message, args) {
-                let helpMessage = "";
-                if(!args){
-                    for (var command in Commands) {
-                        if (checkPermissions(bot, message, message.author, Commands[command].permissionLevel)) {
-                            helpMessage += "!" + command + " -\n";
-                            if(Commands[command].description){
-                                helpMessage += "``` " + Commands[command].description + " ```\n";
-                            }
-                        }
-                    }
-                }
-                else{
-                    for (var i = 0; i < args.length; i++) {
-                        if(Commands[args[i]] &&
-                            checkPermissions(bot, message, message.author, Commands[args[i]].permissionLevel))
-                        {
-                            helpMessage += "!" + args[i] + " -\n";
-                            if(Commands[args[i]].description){
-                                helpMessage += "```" + Commands[args[i]].description + "```\n";
-                            }
-                        }
-                        else{
-                            helpMessage += "invalid command!";
-                        }
-                    }
-                }
-
-                bot.sendMessage(message.channel, helpMessage);
-                return true;
-            },
+            call: helpMessageFunc(message, args),
         },
         "owStat": {
             description: "get overbuff page for a user. \n" +
                          "use @user to request a given user.\n" +
                          "use set bnet#0000 to link your account.\n" +
                          "linking you account will update your overbuff page daily!",
-            call: function(message, args) {
-                return owStats(message, args);
-            },
+            call: owStats(message, args),
         },
         "remind": {
             description: "HEAVY WIP!!!! \n" +
-                         "returns a message to the user at a given time.";
-            call: function (message, args) {
-                createReminder(message, args);
-            }
+                         "returns a message to the user at a given time.",
+            call: createReminder(message, args)
 
         },
         "role": {
             description: "!role join -  join the role!\n" +
                          "!role leave - leave the role!\n" +
                          "!role list - list the members!",
-            call: function(message, args) {
-                return gameRole(bot, message, args);
-            },
+            call: gameRole(bot, message, args),
         },
         "game": {
             description: "move you and players to apropriate voice channel (WIP)",
             permissionLevel: "Mod",
-            call: function(message, args) {
-                return moveUsersToGame(message);
-            },
+            call: moveUsersToGame(message),
         },
         "ping": {
             description: "pong",
@@ -82,9 +44,7 @@ var Commands = {
         "updateOW": {
             description: "forces update of overbuff pages",
             permissionLevel: "Admin",
-            call: function(message, args) {
-                return updateOwStats();
-            },
+            call: updateOwStats(),
         },
         "setGame": {
             description: "set's the game I play!",
@@ -106,18 +66,45 @@ var Commands = {
         },
     };
 
+
+function helpMessageFunc(message, args) {
+    let helpMessage = "";
+    if(!args){
+        for (var command in Commands) {
+            if (checkPermissions(bot, message, message.author, Commands[command].permissionLevel)) {
+                helpMessage += "!" + command + " -\n";
+                if(Commands[command].description){
+                    helpMessage += "``` " + Commands[command].description + " ```\n";
+                }
+            }
+        }
+    }
+    else{
+        for (var i = 0; i < args.length; i++) {
+            if(Commands[args[i]] &&
+                checkPermissions(bot, message, message.author, Commands[args[i]].permissionLevel))
+            {
+                helpMessage += "!" + args[i] + " -\n";
+                if(Commands[args[i]].description){
+                    helpMessage += "```" + Commands[args[i]].description + "```\n";
+                }
+            }
+            else{
+                helpMessage += "invalid command!";
+            }
+        }
+    }
+
+    bot.sendMessage(message.channel, helpMessage);
+    return true;
+};
+
+
 /**
- * [checkPermissions description]
- *
- * @param  {[type]} bot     [description]
- * @param  {[type]} message [description]
- * @param  {[type]} user    [description]
- * @param  {[type]} role    [description]
- *
- * @return {[type]}         [description]
+ * checks if user has permissions for a command based on role level.
  */
 
-function checkPermissions(bot, message, user, role) {
+function checkPermissions(message, user, role) {
     console.log("checking Permissions of: " + user);
     console.log("against role: " + role);
     if(role === undefined){

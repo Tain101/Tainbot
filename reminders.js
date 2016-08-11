@@ -8,22 +8,23 @@ let chrono = require('chrono-node');
 let bot          = global.bot;
 let reminderList = [];
 
-let Reminder = function (time, message, channel, verify = false) {
-    let time    = time;
-    let message = message;
-    let channel = channel;
-    let verify  = verify;
-    let timeout = null;
+let Reminder = function (time, message, channel, verify) {
+    this.time    = time;
+    this.message = message;
+    this.channel = channel;
+    this.verify  = verify || false;
+    this.timeout = null;
 
     this.checkSetTimeout = function () {
         let now = new Date.getTime();
-        if(time - now < MIN_TIMEOUT_DUR && !timeout){
-            timeout = setTimeout(this.trigger, time-now);
+        let duration = this.time - now;
+        if(duration < MIN_TIMEOUT_DUR && !timeout){
+            timeout = setTimeout(this.trigger, duration);
         }
     };
 
     this.trigger = function () {
-        bot.sendMessage(message, channel);
+        bot.sendMessage(this.message, this.channel);
         deleteReminder(this);
     };
 
@@ -47,7 +48,7 @@ let createReminder = function (message, args) {
 }
 
 
-let loadReminders = function () {
+this.loadReminders = function () {
     let data             = fs.readFileSync(REMINDER_FILE, "utf8");
     let reminderListJSON = JSON.parse(data);
     reminderList         = [];

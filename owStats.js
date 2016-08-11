@@ -57,14 +57,18 @@ this.updateOwStats = function() {
 
     for (var user in owStatsJson) {
         request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user] + "/refresh", function callback(err, httpResponse, body) {
+            console.log(httpResponse.statusCode);
+            if(err){
                 console.log("err: " + err);
-                console.log("httpResponse: " + httpResponse);
                 console.log("body: " + body);
+            }
         });
         request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user] + "/update", function callback(err, httpResponse, body) {
+            console.log(httpResponse.statusCode);
+            if(err){
                 console.log("err: " + err);
-                console.log("httpResponse: " + httpResponse);
                 console.log("body: " + body);
+            }
         });
     }
 

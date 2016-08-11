@@ -1,12 +1,15 @@
 //running using 'forever' package
 
 "use strict";
-var Discord  = require("discord.js");
-var Auth     = require('./auth.json');
-var Commands = require('./Commands.js');//http://stackoverflow.com/a/28066576
-var owStats  = require('./owStats.js');
-
+var Discord   = require("discord.js");
 global.bot = new Discord.Client({autoReconnect:true});
+
+var Auth      = require('./auth.json');
+var Commands  = require('./Commands.js');//http://stackoverflow.com/a/28066576
+var owStats   = require('./owStats.js');
+let reminders = require('./reminders.js');
+
+
 let bot    = global.bot;
 bot.loginWithToken(Auth.token);
 
@@ -35,16 +38,24 @@ function handleMessage(message) {
     let key      = strArray.shift().substr(1); //first word is key
     let args     = getArgs(strArray); // the rest are arguments
     let commList = Commands.Commands;
-    console.log(key);
-    console.log(args + '\n');
+    console.log("handleMessage:")
+    console.log("key: " + key);
+    console.log("args: " + args);
 
+    console.log("   looking for command:")
     for (var command in commList){
+        console.log("   looking at: " + command);
         if(key === command){
-            if(checkPermissions(bot, message, message.author, commList[command].permissionLevel)){
-                commList[command].call(bot, message, args);
+            console.log("       found command: " + command);
+            console.log("       checking permissions: ");
+            if(Commands.checkPermissions(message, message.author, commList[command].permissionLevel)){
+                console.log("           perms are good, executing command!");
+                commList[command].call(message, args);
             }
         }
     }
+
+    console.log("==========");
 }
 
 /**

@@ -1,7 +1,8 @@
 "use strict";
-let gameRole = function(mybot, message, args) {
+let bot = global.bot;
+let gameRole = function(message, args) {
     if(!args[0] || !args[1]){
-        mybot.sendMessages("Try again!");
+        bot.sendMessages("Try again!");
         return false;
     }
 
@@ -20,24 +21,24 @@ let gameRole = function(mybot, message, args) {
         }
     }
     if(!role){
-        mybot.sendMessages("I couldn't find that role!");
+        bot.sendMessages("I couldn't find that role!");
         return false;
     }
 
     //verify user's permissions
     if(!checkPermissions(message, user, role)){
-        mybot.sendMessages("You aren't powerful enough for this role!");
+        bot.sendMessages("You aren't powerful enough for this role!");
         return false;
     }
 
     //Execute
     if(args[0] === "join"){
-        mybot.addMemberToRole(message.author, role, function(error){
+        bot.addMemberToRole(message.author, role, function(error){
             console.log(error);
             console.log(args + ":" + roles + ":" + role);
         });
     } else if(args[0] === "leave"){
-        mybot.removeMemberFromRole(message.author, role, function(error){
+        bot.removeMemberFromRole(message.author, role, function(error){
             console.log(error);
             console.log(args + roles + role);
         });
@@ -50,10 +51,10 @@ let gameRole = function(mybot, message, args) {
         }
 
         message += "```\n";
-        mybot.sendMessages(message);
+        bot.sendMessages(message);
         return true;
     } else {
-        mybot.sendMessages("You need to let me know if you want to leave or join!");
+        bot.sendMessages("You need to let me know if you want to leave or join!");
         return false;
 
     }

@@ -7,12 +7,12 @@ let gameRole = function(message, args) {
         return false;
     }
 
-    var server     = message.server;
-    var channel    = message.channel;
-    var roles      = server.roles;
-    var roleString = args[1].toLowerCase();
-    var role       = null;
-    var userPerms  = null;
+    let server     = message.server;
+    let channel    = message.channel;
+    let roles      = server.roles;
+    let roleString = args[1].toLowerCase();
+    let role       = null;
+    let userPerms  = null;
 
     //get role
     for (var i = 0; i < roles.length; i++) {
@@ -44,8 +44,8 @@ let gameRole = function(message, args) {
             console.log(args + roles + role);
         });
     } else if(args[0] === "list"){
-        var message = "users in: `"+ role.name +"` \n" + "```\n";
-        var userList = server.usersWithRole(role);
+        let message = "users in: `"+ role.name +"` \n" + "```\n";
+        let userList = server.usersWithRole(role);
         console.log(args + ":" + role.name + ":" + userList);
         for (var i = 0; i < userList.length; i++) {
             message += userList[i].name + '\n';

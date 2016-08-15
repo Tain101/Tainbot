@@ -2,14 +2,49 @@
 let Commands = require('./Commands.js');
 let fs       = require('fs');
 
-this.runTests = function (message, args) {
+//TODO MOCKS
+let mockMessages = {
+    default: {
+
+    },
+    admin: {
+
+    },
+    mod: {
+
+    },
+    nothing: {
+
+    },
+}
+let mocks = {
+    "help":{
+        default: {
+            message: mockMessages.default,
+            args: ["help", "owStat", "ping"]
+        },
+        admin: {
+            message: mockMessages.admin,
+            args: ["help", "owStat", "ping"]
+        },
+    },
+    "owStat":{},
+    "remind":{},
+    "role":{},
+    "game":{},
+    "ping":{},
+    "updateOW":{},
+    "setGame":{},
+    "!Test":{},
+}
+
+function runTests(message, args) {
     let commList = Commands.Commands;
     let log      = "\n";
     let count    = 0;
 
     log += "Tesing all commands:" + "\n";
 
-    // log += new Error().stack + "\n";
     log += "==============================" + "\n";
     for(var command in commList){
         log += "    Testing:" + command + "\n";
@@ -34,3 +69,5 @@ this.runTests = function (message, args) {
     console.log(log);
     fs.writeFileSync("Test.js.log", log, "utf8");
 }
+
+this.runTests = runTests;

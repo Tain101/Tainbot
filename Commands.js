@@ -1,6 +1,5 @@
 "use strict";
-var Discord   = require("discord.js");
-
+let Discord   = require("discord.js");
 let owStats   = require('./owStats.js');
 let gameRoles = require('./gameRoles.js');
 let reminders = require('./reminders.js');
@@ -8,36 +7,35 @@ let Test      = require('./Test.js');
 
 let bot = global.bot;
 
-var Commands = {
-        "help": {
+let Commands = {
+        "help":{
             description: "You're lookin' at it.",
             call: function(message, args){ helpMessageFunc(message, args)},
         },
-        "owStat": {
+        "owStat":{
             description: "get overbuff page for a user. \n" +
                          "use @user to request a given user.\n" +
                          "use set bnet#0000 to link your account.\n" +
                          "linking you account will update your overbuff page daily!",
             call: function(message, args){ owStats.owStats(message, args)},
         },
-        "remind": {
+        "remind":{
             description: "HEAVY WIP!!!! \n" +
                          "returns a message to the user at a given time.",
             call: function(message, args){ reminders.createReminder(message, args)},
-
         },
-        "role": {
+        "role":{
             description: "!role join -  join the role!\n" +
                          "!role leave - leave the role!\n" +
                          "!role list - list the members!",
             call: function(message, args){ gameRoles.gameRole(message, args)},
         },
-        "game": {
+        "game":{
             description: "move you and players to apropriate voice channel (WIP)",
             permissionLevel: "Mod",
             call: function(message, args){ moveUsersToGame(message, args)},
         },
-        "ping": {
+        "ping":{
             description: "pong",
             permissionLevel: "Admin",
             call: function(message, args){
@@ -46,12 +44,12 @@ var Commands = {
                 return true;
             },
         },
-        "updateOW": {
+        "updateOW":{
             description: "forces update of overbuff pages",
             permissionLevel: "Admin",
             call: function(message, args){ owStats.updateOwStats(message, args)},
         },
-        "setGame": {
+        "setGame":{
             description: "set's the game I play!",
             permissionLevel: "Admin",
             call: function(message, args){
@@ -62,7 +60,7 @@ var Commands = {
 
                 bot.setPlayingGame(args.join(' '), function(err) {
                     if (err) {
-                        console.log("err:{ \n    " + err);
+                        console.log("err: \n    " + err);
                         flag = false;
                     }
                 });
@@ -78,8 +76,7 @@ var Commands = {
                 Test.runTests(message, args);
             },
         }
-    };
-this.Commands = Commands;
+};
 
 function helpMessageFunc(message, args) {
     let helpMessage = "";
@@ -113,11 +110,9 @@ function helpMessageFunc(message, args) {
     return true;
 };
 
-
 /**
  * checks if user has permissions for a command based on role level.
  */
-
 function checkPermissions(message, user, role) {
     // console.log("checking Permissions of: " + user);
     // console.log("against role: " + role);
@@ -145,9 +140,7 @@ function checkPermissions(message, user, role) {
     }
 
     return true;
-}
-
-this.checkPermissions = checkPermissions;
+};
 
 /**
  * Moves all users who are playing same game as author, to voice channel of that name.
@@ -155,7 +148,6 @@ this.checkPermissions = checkPermissions;
  *
  * @param  {Message} message Message containing "!game"
  */
-
 function moveUsersToGame(message) {
     let messageToSend = ""; // message to send in response
     let game          = message.author.game; // game user is playing
@@ -193,4 +185,7 @@ function moveUsersToGame(message) {
     }
 
     bot.sendMessage(message, messageToSend);
-}
+};
+
+this.Commands = Commands;
+this.checkPermissions = checkPermissions;

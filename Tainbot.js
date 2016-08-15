@@ -1,17 +1,18 @@
 //running using 'forever' package
-//TODO let x = fun
-//  or fun x() ?
-
+// Object   -> let x = fun
+// function -> fun x()
+// public   -> this.foo = foo;
 
 "use strict";
-var Discord   = require("discord.js");
+let INTER_TIME = 3600000; // One Hour
+
+let Discord   = require("discord.js");
 global.bot = new Discord.Client({autoReconnect:true});
 
-var Auth      = require('./auth.json');
-var Commands  = require('./Commands.js');//http://stackoverflow.com/a/28066576
-var owStats   = require('./owStats.js');
+let Auth      = require('./auth.json');
+let owStats   = require('./owStats.js');
 let reminders = require('./reminders.js');
-
+let utils     = require('./utils.js');
 
 let bot    = global.bot;
 bot.loginWithToken(Auth.token);
@@ -23,53 +24,13 @@ bot.on("ready", function() {
 
 bot.on("message", function(message) {
     if (message.content[0] !== "!" ||   //if 1st char isn't '!' return
-        message.author.bot) {                  //or if sender is a bot
+        message.author.bot) {           //or if sender is a bot
         return;
     }
-    handleMessage(message);
+    utils.evaluateCommand(message);
 });
-
-/**
- * Parses message to get the command key and puts the rest of the args in an array.
- *     todo: message args should be parsed differently?
- *
- * @param  {message} message message object from user
- *
- */
-function handleMessage(message) {
-    let strArray = message.content.split(' '); //make array of words
-    let key      = strArray.shift().substr(1); //first word is key
-    let args     = getArgs(strArray); // the rest are arguments
-    let commList = Commands.Commands;
-    console.log("handleMessage:")
-    console.log("key: " + key);
-    console.log("args: " + args);
-
-    if(commList[key]){
-        if(Commands.checkPermissions(message, message.author, commList[key].permissionLevel)){
-                commList[key].call(message, args);
-        }
-    }
-}
-
-/**
- * returns array of arguemts from string.
- */
-
-function getArgs(stringArr) {
-    for (var i = 0; i < stringArr.length; i++) {
-        if (!stringArr[i] || stringArr[i] === "") {
-            stringArr.splice(i, 1);
-        }
-    }
-    if (stringArr.length === 0) {
-        return false;
-    }
-    return stringArr;
-}
-
 
 setInterval(function () {
     owStats.checkForStatsUpdate();
     reminders.loadReminders();
-}, 60*60*1000);//once an hour * minute * milli
+}, INTER_TIME);//once an hour * minute * milli

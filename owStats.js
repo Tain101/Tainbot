@@ -1,4 +1,3 @@
-//TODO: make this work with username as a string instead of @name
 //http://masteroverwatch.com/profile/pc/us/Tain-1600
 
 "use strict";
@@ -9,22 +8,40 @@ let request   = require('request');
 
 let bot = global.bot;
 
-let owStats = function(message, args) {
+/**
+ * "get overbuff page for a user. \n" +
+ * "use @user to request a given user.\n" +
+ * "use set bnet#0000 to link your account.\n" +
+ * "linking you account will update your overbuff page daily!",
+ *
+ * todo:
+ * add kill for removing self from list
+ * add kill @user for removing user from list [admin only]
+ * make work with string search instead of @user
+ *
+ * @param  {message} message message calling command
+ * @param  {String[]} args   array of arguments
+ *
+ * @return {Boolean}         returns if command s
+ */
+
+function owStats(message, args) {
     if (args[0] === "set") {
         if (!args[1]) {
             bot.sendMessage("you need to give me your bnet! try again.");
             return false;
         } else {
             setOwStats(message.author, args[1]);
-            bot.sendMessage("your bnet has been saved!");
+            bot.sendMessage("your bnet has been saved! \n" +
+                            "here is your link: \n" +
+                            "https://www.overbuff.com/players/pc/" + args[1].replace("#", "-"));
             return true;
         }
 
     } else {
-        var owStatsJson = null;
-        var data        = fs.readFileSync(STAT_FILE, "utf8");
-        owStatsJson     = JSON.parse(data);
-        var user        = args[0] || message.author;
+        let data        = fs.readFileSync(STAT_FILE, "utf8");
+        let owStatsJson = JSON.parse(data);
+        let user        = args[0] || message.author;
 
         if (owStatsJson.hasOwnProperty(user)) { //check if user already has linked their bnet
             bot.sendMessage("https://www.overbuff.com/players/pc/" + owStatsJson[user]);
@@ -36,28 +53,23 @@ let owStats = function(message, args) {
     }
 };
 
-this.owStats= owStats;
-
 function setOwStats(author, bnet) {
-    var owStatsJson = null;
-    var data        = fs.readFileSync(STAT_FILE, "utf8");
-    owStatsJson     = JSON.parse(data);
-    console.log(owStatsJson);
+    let data        = fs.readFileSync(STAT_FILE, "utf8");
+    let owStatsJson = JSON.parse(data);
 
     bnet                = bnet.replace("#", "-");
     owStatsJson[author] = bnet;
 
     fs.writeFileSync(STAT_FILE, JSON.stringify(owStatsJson), "utf8");
+};
 
-}
-
-this.updateOwStats = function() {
+function updateOwStats() {
     console.log("time to update stats!");
-    var owStatsJson = null;
-    var data        = fs.readFileSync(STAT_FILE, "utf8");
+    let owStatsJson = null;
+    let data        = fs.readFileSync(STAT_FILE, "utf8");
     owStatsJson     = JSON.parse(data);
 
-    for (var user in owStatsJson) {
+    for (let user in owStatsJson) {
         request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user] + "/refresh", function callback(err, httpResponse, body) {
             console.log(httpResponse.statusCode);
             if(err){
@@ -73,15 +85,7 @@ this.updateOwStats = function() {
             }
         });
     }
+};
 
-    // now = new Date().getTime();
-}
-
- //returns true once a day
-function checkForStatsUpdate() {
-    var date = new Date();
-    if (Date().getUTCHours() === 11) {
-
-        updateOwStats();
-    }
-}
+this.owStats       = owStats;
+this.updateOwStats = updateOwStats;

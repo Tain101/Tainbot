@@ -4,6 +4,7 @@ let owStats   = require('./owStats.js');
 let gameRoles = require('./gameRoles.js');
 let reminders = require('./reminders.js');
 let Test      = require('./Test.js');
+let langList  = require('./langList.js');
 
 let bot = global.bot;
 
@@ -32,12 +33,12 @@ let Commands = {
         },
         "game":{
             description: "move you and players to apropriate voice channel (WIP)",
-            permissionLevel: "Mod",
+            permissionsReq: {voiceMoveMembers: true},
             call: function(message, args){ moveUsersToGame(message, args)},
         },
         "ping":{
             description: "pong",
-            permissionLevel: "Admin",
+            permissionsReq: {administrator: true},
             call: function(message, args){
                 bot.sendMessage(message, "!pong");
                 console.log("!pong");
@@ -46,12 +47,12 @@ let Commands = {
         },
         "updateOW":{
             description: "forces update of overbuff pages",
-            permissionLevel: "Admin",
+            permissionsReq: {administrator: true},
             call: function(message, args){ owStats.updateOwStats(message, args)},
         },
         "setGame":{
             description: "set's the game I play!",
-            permissionLevel: "Admin",
+            permissionsReq: {administrator: true},
             call: function(message, args){
                 args = args || "Tetris or something"; //TODO: random funny games
                 console.log(message.author.id);
@@ -70,19 +71,34 @@ let Commands = {
         },
         "!Test":{
             description: "runs all commands",
-            permissionLevel: "Admin",
-            call: function(message, args){
-                console.log("Test");
-                Test.runTests(message, args);
+            permissionsReq: {administrator: true},
+            call: function(){
+                Test.runTests();
             },
-        }
+        },
+        "!color":{
+            description: "lets you send a message in a given text color",
+            permissionsReq: {administrator: true},
+            call: function (message) {
+                let languageList = langList.list;
+                for (var i = 0; i < languageList.length; i++) {
+                    let testText = "```" + languageList[i] + "\n" +
+                                   "test test test" + languageList[i] + "\n" +
+                                   "test test test\n" +
+                                   "```\n";
+                    bot.sendMessage(message, testText);
+                }
+            }
+        },
 };
 
 function helpMessageFunc(message, args) {
+    console.log(message.content);
+    console.log(args);
     let helpMessage = "";
     if(!args){
         for (var command in Commands) {
-            if (checkPermissions(message, message.author, Commands[command].permissionLevel)) {
+            if (checkPermissions(message, message.author, Commands[command].permissionsReq)) {
                 helpMessage += "!" + command + " -\n";
                 if(Commands[command].description){
                     helpMessage += "``` " + Commands[command].description + " ```\n";
@@ -93,7 +109,7 @@ function helpMessageFunc(message, args) {
     else{
         for (var i = 0; i < args.length; i++) {
             if(Commands[args[i]] &&
-                checkPermissions(message, message.author, Commands[args[i]].permissionLevel))
+                checkPermissions(message, message.author, Commands[args[i]].permissionsReq))
             {
                 helpMessage += "!" + args[i] + " -\n";
                 if(Commands[args[i]].description){
@@ -113,28 +129,28 @@ function helpMessageFunc(message, args) {
 /**
  * checks if user has permissions for a command based on role level.
  */
-function checkPermissions(message, user, role) {
-    // console.log("checking Permissions of: " + user);
-    // console.log("against role: " + role);
-    if(role === undefined){
+function checkPermissions(message, user, permReq) {
+    if(!permReq){
         return true;
     }
     if(!user){
         return false;
     }
+
     if(typeof(user) === "string"){
         user = message.server.users.get("id", user);
     }
-    if(typeof(role) === "string"){
-        role = message.server.roles.get("name", role);
+    let userPerms = message.channel.permissionsOf(user);
+
+    if(!user){
+        throw new Error("invalid user.");
+        return false;
     }
 
-    user = message.channel.permissionsOf(message.author);
-    // console.log(user.serialize());
-    for (var perm in Discord.Constants.Permissions) {
-        let roleHasPerm = role.hasPermission(perm);
-        let userHasPerm = user.hasPermission(perm);
-        if( roleHasPerm && !userHasPerm){
+    for(var perm in permReq){
+        if(!userPerms.hasPermission(perm)){
+            console.log("user did not have perm: " + perm);
+
             return false;
         }
     }

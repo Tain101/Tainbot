@@ -126,3 +126,4 @@ function deleteReminder(reminder) {
 };
 
 this.createReminder = createReminder;
+this.loadReminders  = loadReminders;

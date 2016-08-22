@@ -7,6 +7,17 @@
  */
 "use strict";
 let Commands  = require('./Commands.js');
+let reminders = require('./reminders.js');
+let Test      = require('./Test.js');
+
+let colorList = {
+    lightBlue         : "brainfuck",
+    blueFirstEachLine : "haskell",
+    greenFirstEachLine: "apache",
+    green             : "css",
+    greenFirstWord    : "nginx",
+};
+let RUN_TESTS_ON_READY = true;
 /**
  * Checks if message is a valid command
  *     splits message into key, args[]
@@ -30,6 +41,8 @@ function evaluateCommand(message) {
 
     if(commList[key]){
         if(Commands.checkPermissions(message, message.author, commList[key].permissionLevel)){
+                console.log("   executing command: " + key);
+                console.log("   with args:" + args);
                 commList[key].call(message, args);
         }
     }
@@ -59,9 +72,44 @@ function getArgs(stringArr) {
 //returns true once a day
 function checkForStatsUpdate() {
     let date = new Date();
-    if (Date().getUTCHours() === 11) {
+    if (date.getUTCHours() === 11) {
         updateOwStats();
     }
 };
 
-this.evaluateCommand = evaluateCommand;
+function sendMessage(message, channel, error){
+    if(LOG_MESSAGES){
+        console.log();
+        console.log("sending message to channel: " + channel);
+        console.log("message:");
+        console.log(message);
+    }
+    if(SHOW_ERRORS){
+        console.log(msg)
+    }
+
+    bot.sendMessage(channel, message);
+}
+
+function botReadyFunc(){
+    if(RUN_TESTS_ON_READY){
+        Test.runTests();
+    }
+    checkForStatsUpdate();
+    reminders.loadReminders();
+    console.log("ready!\n");
+};
+
+function botMessageFunc(message) {
+    if (message.content[0] !== "!" ||   //if 1st char isn't '!' return
+        message.author.bot) {           //or if sender is a bot
+        return;
+    }
+    evaluateCommand(message);
+};
+
+
+this.evaluateCommand     = evaluateCommand;
+this.checkForStatsUpdate = checkForStatsUpdate;
+this.botReadyFunc        = botReadyFunc;
+this.botMessageFunc      = botMessageFunc;

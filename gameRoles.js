@@ -1,4 +1,8 @@
+//TODO not working currently
+
 "use strict";
+let commands = require('./Commands.js')
+
 let bot = global.bot;
 
 let gameRole = function(message, args) {
@@ -8,16 +12,21 @@ let gameRole = function(message, args) {
     }
 
     let server     = message.server;
-    let channel    = message.channel;
     let roles      = server.roles;
+    console.log("roles");
+    console.log(roles);
+    console.log(roles.length);
     let roleString = args[1].toLowerCase();
+    console.log("roleString");
+    console.log(roleString);
     let role       = null;
-    let userPerms  = null;
+    let userPerms  = message.author;
 
     //get role
-    for (var i = 0; i < roles.length; i++) {
-        if(roles[i].name.toLowerCase() === roleString){
-            role = roles[i];
+    for (var roleObj in roles) {
+        console.log(roles[roleObj]);
+        if(roles[roleObj].name.toLowerCase() === roleString){
+            role = roles[roleObj];
             break;
         }
     }
@@ -27,28 +36,30 @@ let gameRole = function(message, args) {
     }
 
     //verify user's permissions
-    if(!checkPermissions(message, user, role)){
+    if(!commands.checkPermissions(message, userPerms, role.permissions)){
         bot.sendMessage("You aren't powerful enough for this role!");
         return false;
     }
 
     //Execute
     if(args[0] === "join"){
-        bot.addMemberToRole(message.author, role, function(error){
+        bot.addMemberToRole(message.author, role.permissions, function(error){
             console.log(error);
             console.log(args + ":" + roles + ":" + role);
         });
     } else if(args[0] === "leave"){
-        bot.removeMemberFromRole(message.author, role, function(error){
+        bot.removeMemberFromRole(message.author, role.permissions, function(error){
             console.log(error);
             console.log(args + roles + role);
         });
     } else if(args[0] === "list"){
         let message = "users in: `"+ role.name +"` \n" + "```\n";
         let userList = server.usersWithRole(role);
-        console.log(args + ":" + role.name + ":" + userList);
-        for (var i = 0; i < userList.length; i++) {
-            message += userList[i].name + '\n';
+        console.log(args + ":" + role.name);
+        console.log(userList);
+        for (var userObj in userList) {
+            console.log(userObj);
+            message += userList[userObj].username + '\n';
         }
 
         message += "```\n";

@@ -34,6 +34,7 @@ let removeMemberFromRole = function (member, role, callback) {
     discordBot.removeMemberFromRole(member, role, callback);
 };
 
+this.discordBot           = discordBot;
 this.loginWithToken       = loginWithToken;
 this.on                   = on;
 this.sendMessage          = sendMessage;

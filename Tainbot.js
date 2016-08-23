@@ -4,14 +4,18 @@
 // public   -> this.foo = foo;
 
 "use strict";
-let INTER_TIME         = 3600000; // One Hour
+Error.stackTraceLimit = Infinity;
+let INTER_TIME        = 3600000; // One Hour
 
 global.bot    = require('./bot.js');
 let Auth      = require('./auth.json');
 let owStats   = require('./owStats.js');
 let reminders = require('./reminders.js');
 let utils     = require('./utils.js');
-let Test      = require('./Test.js');
+let colors    = require('colors/safe');
+
+process.stdout.write('\x1Bc');
+console.log(colors.green("~~~starting Tainbot~~~"));
 
 let bot = global.bot;
 bot.loginWithToken(Auth.token);

@@ -8,7 +8,6 @@
 "use strict";
 let Commands  = require('./Commands.js');
 let reminders = require('./reminders.js');
-let Test      = require('./Test.js');
 
 let colorList = {
     lightBlue         : "brainfuck",
@@ -36,13 +35,15 @@ function evaluateCommand(message) {
     let args     = getArgs(strArray); // the rest are arguments
     let commList = Commands.Commands;
     console.log("evaluateCommand:")
-    console.log("key: " + key);
-    console.log("args: " + args);
+    console.log("key            : " + key);
+    console.log("args           : " + args);
+    console.log("=========================")
 
     if(commList[key]){
+        console.log("checkPermissions for " + key);
         if(Commands.checkPermissions(message, message.author, commList[key].permissionLevel)){
-                console.log("   executing command: " + key);
-                console.log("   with args:" + args);
+                console.log("   executing command : " + key);
+                console.log("   with args         : " + args);
                 commList[key].call(message, args);
         }
     }
@@ -92,9 +93,6 @@ function sendMessage(message, channel, error){
 }
 
 function botReadyFunc(){
-    if(RUN_TESTS_ON_READY){
-        Test.runTests();
-    }
     checkForStatsUpdate();
     reminders.loadReminders();
     console.log("ready!\n");

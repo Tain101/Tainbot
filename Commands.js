@@ -3,8 +3,8 @@ let Discord   = require("discord.js");
 let owStats   = require('./owStats.js');
 let gameRoles = require('./gameRoles.js');
 let reminders = require('./reminders.js');
-let Test      = require('./Test.js');
 let langList  = require('./langList.js');
+let colors    = require('colors/safe');
 
 let bot = global.bot;
 
@@ -69,13 +69,6 @@ let Commands = {
                 return flag;
             },
         },
-        "!Test":{
-            description: "runs all commands",
-            permissionsReq: {administrator: true},
-            call: function(){
-                Test.runTests();
-            },
-        },
         "!color":{
             description: "lets you send a message in a given text color",
             permissionsReq: {administrator: true},
@@ -129,11 +122,15 @@ function helpMessageFunc(message, args) {
 /**
  * checks if user has permissions for a command based on role level.
  */
-function checkPermissions(message, user, permReq) {
-    if(!permReq){
+function checkPermissions(message, user, roleOrPermList) {
+    console.log("checkPermissions");
+    if(!roleOrPermList){
+        console.log("no roleOrPermList");
         return true;
     }
     if(!user){
+        console.log("no user");
+        console.log(new Error().stack);
         return false;
     }
 
@@ -144,13 +141,23 @@ function checkPermissions(message, user, permReq) {
 
     if(!user){
         throw new Error("invalid user.");
+        console.log(new Error().stack);
         return false;
     }
 
-    for(var perm in permReq){
-        if(!userPerms.hasPermission(perm)){
-            console.log("user did not have perm: " + perm);
+    let PERM_LIST = Discord.Constants.Permissions;
 
+    for(var perm in PERM_LIST){
+        let reqPerm  = roleOrPermList[perm];
+        let userPerm = userPerms.hasPermission(PERM_LIST[perm]);
+
+        if(roleOrPermList.hasPermission){
+            reqPerm = roleOrPermList.hasPermission(PERM_LIST[perm]);
+        }
+
+        if(!!reqPerm && !userPerm){
+            console.log("  user did not have perm: ");
+            console.log(perm);
             return false;
         }
     }

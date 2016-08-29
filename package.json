@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "discord.js": "",
+    "colors": "",
+    "cli-table": "",
+    "request": "",
+    "chrono-node": "",
+  }
+}

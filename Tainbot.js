@@ -1,4 +1,5 @@
 //running using 'forever' package
+//forever start -fwa -l TainbotForever.log /home/tain/Tainbot/Tainbot.js
 "use strict";
 let colors    = require('colors/safe');
 

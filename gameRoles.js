@@ -2,7 +2,7 @@
 
 "use strict";
 let commands = require('./Commands.js');
-let colors   = require('colors/safe');
+let logger   = require('./logger.js');
 
 let bot = global.bot;
 

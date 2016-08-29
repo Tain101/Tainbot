@@ -9,6 +9,7 @@
 let Commands  = require('./Commands.js');
 let reminders = require('./reminders.js');
 let owStats   = require('./owStats.js');
+let logger    = require('./logger.js');
 
 let colorList = {
     lightBlue         : "brainfuck",

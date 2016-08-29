@@ -1,10 +1,10 @@
 //http://masteroverwatch.com/profile/pc/us/Tain-1600
-
 "use strict";
-let STAT_FILE = "owStatsJson.json";
+let fs      = require('fs-extra'); //filesystem
+let request = require('request');
+let logger  = require('./logger.js');
 
-let fs        = require('fs-extra'); //filesystem
-let request   = require('request');
+let STAT_FILE = "owStatsJson.json";
 
 let bot = global.bot;
 

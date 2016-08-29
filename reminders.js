@@ -1,6 +1,7 @@
 "use strict";
 let fs     = require('fs-extra'); //filesystem
 let chrono = require('chrono-node');
+let logger = require('./logger.js');
 
 let MIN_TIMEOUT_DUR = 93600000;//26*60*60*1000 hours * minutes * millliseconds
 let REMINDER_FILE   = "reminders.json";

@@ -27,7 +27,8 @@ function warn(message) {
 };
 
 function error(message, error) {
-    message = " Error: " + message;
+    error = error || new Error();
+    message = message;
     internalLog(message, LOG_LEVEL.ERROR);
     internalLog(error.stack, LOG_LEVEL.WARNING);
 };

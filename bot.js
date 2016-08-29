@@ -1,6 +1,7 @@
 "use strict";
 let Discord    = require("discord.js");
 let discordBot = new Discord.Client({autoReconnect:true});
+let logger     = require('./logger.js');
 
 let loginWithToken = function (token, email, password, callback) {
     discordBot.loginWithToken(token, email, password, callback);

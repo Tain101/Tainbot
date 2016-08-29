@@ -4,6 +4,7 @@
     "colors": "",
     "cli-table": "",
     "request": "",
-    "chrono-node": "",
+    "fs-extra": "",
+    "chrono-node": ""
   }
 }

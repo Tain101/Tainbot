@@ -8,6 +8,7 @@
 "use strict";
 let Commands  = require('./Commands.js');
 let reminders = require('./reminders.js');
+let owStats   = require('./owStats.js');
 
 let colorList = {
     lightBlue         : "brainfuck",
@@ -34,16 +35,16 @@ function evaluateCommand(message) {
     let key      = strArray.shift().substr(1); //first word is key
     let args     = getArgs(strArray); // the rest are arguments
     let commList = Commands.Commands;
-    console.log("evaluateCommand:")
-    console.log("key            : " + key);
-    console.log("args           : " + args);
-    console.log("=========================")
+    logger.log("evaluateCommand:")
+    logger.log("key            : " + key);
+    logger.log("args           : " + args);
+    logger.log("=========================")
 
     if(commList[key]){
-        console.log("checkPermissions for " + key);
+        logger.log("checkPermissions for " + key);
         if(Commands.checkPermissions(message, message.author, commList[key].permissionLevel)){
-                console.log("   executing command : " + key);
-                console.log("   with args         : " + args);
+                logger.log("   executing command : " + key);
+                logger.log("   with args         : " + args);
                 commList[key].call(message, args);
         }
     }
@@ -74,40 +75,9 @@ function getArgs(stringArr) {
 function checkForStatsUpdate() {
     let date = new Date();
     if (date.getUTCHours() === 11) {
-        updateOwStats();
+        owStats.updateOwStats();
     }
 };
-
-function sendMessage(message, channel, error){
-    if(LOG_MESSAGES){
-        console.log();
-        console.log("sending message to channel: " + channel);
-        console.log("message:");
-        console.log(message);
-    }
-    if(SHOW_ERRORS){
-        console.log(msg)
-    }
-
-    bot.sendMessage(channel, message);
-}
-
-function botReadyFunc(){
-    checkForStatsUpdate();
-    reminders.loadReminders();
-    console.log("ready!\n");
-};
-
-function botMessageFunc(message) {
-    if (message.content[0] !== "!" ||   //if 1st char isn't '!' return
-        message.author.bot) {           //or if sender is a bot
-        return;
-    }
-    evaluateCommand(message);
-};
-
 
 this.evaluateCommand     = evaluateCommand;
 this.checkForStatsUpdate = checkForStatsUpdate;
-this.botReadyFunc        = botReadyFunc;
-this.botMessageFunc      = botMessageFunc;

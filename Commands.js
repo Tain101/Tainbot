@@ -41,7 +41,7 @@ let Commands = {
             permissionsReq: {administrator: true},
             call: function(message, args){
                 bot.sendMessage(message, "!pong");
-                console.log("!pong");
+                logger.log("!pong");
                 return true;
             },
         },
@@ -55,13 +55,13 @@ let Commands = {
             permissionsReq: {administrator: true},
             call: function(message, args){
                 args = args || "Tetris or something"; //TODO: random funny games
-                console.log(message.author.id);
-                console.log("setGame " + args.join(' '));
+                logger.log(message.author.id);
+                logger.log("setGame " + args.join(' '));
                 let flag = true;
 
                 bot.setPlayingGame(args.join(' '), function(err) {
                     if (err) {
-                        console.log("err: \n    " + err);
+                        logger.log("err: \n    " + err);
                         flag = false;
                     }
                 });
@@ -86,8 +86,8 @@ let Commands = {
 };
 
 function helpMessageFunc(message, args) {
-    console.log(message.content);
-    console.log(args);
+    logger.log(message.content);
+    logger.log(args);
     let helpMessage = "";
     if(!args){
         for (var command in Commands) {
@@ -123,14 +123,14 @@ function helpMessageFunc(message, args) {
  * checks if user has permissions for a command based on role level.
  */
 function checkPermissions(message, user, roleOrPermList) {
-    console.log("checkPermissions");
+    logger.log("checkPermissions");
     if(!roleOrPermList){
-        console.log("no roleOrPermList");
+        logger.log("no roleOrPermList");
         return true;
     }
     if(!user){
-        console.log("no user");
-        console.log(new Error().stack);
+        logger.log("no user");
+        logger.log(new Error().stack);
         return false;
     }
 
@@ -141,7 +141,7 @@ function checkPermissions(message, user, roleOrPermList) {
 
     if(!user){
         throw new Error("invalid user.");
-        console.log(new Error().stack);
+        logger.log(new Error().stack);
         return false;
     }
 
@@ -156,8 +156,8 @@ function checkPermissions(message, user, roleOrPermList) {
         }
 
         if(!!reqPerm && !userPerm){
-            console.log("  user did not have perm: ");
-            console.log(perm);
+            logger.log("  user did not have perm: ");
+            logger.log(perm);
             return false;
         }
     }
@@ -199,7 +199,7 @@ function moveUsersToGame(message) {
             messageToSend += "I found this channel: `" + gameChannel.name + "`\n";
             for (let i = 0; i < userList.length; i++) {
                 bot.moveMember(userList[i], gameChannel, (function(err) {
-                    if (err) console.error("err: \n     " + err);
+                    if (err) logger.error(err);
                 }));
             }
         }

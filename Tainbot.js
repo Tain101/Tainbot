@@ -1,29 +1,39 @@
 //running using 'forever' package
-// Object   -> let x = fun
-// function -> fun x()
-// public   -> this.foo = foo;
-
 "use strict";
-Error.stackTraceLimit = Infinity;
-let INTER_TIME        = 3600000; // One Hour
+let colors    = require('colors/safe');
 
 global.bot    = require('./bot.js');
 let Auth      = require('./auth.json');
-let owStats   = require('./owStats.js');
 let reminders = require('./reminders.js');
 let utils     = require('./utils.js');
-let colors    = require('colors/safe');
+let logger    = require('./logger.js');
 
-process.stdout.write('\x1Bc');
-console.log(colors.green("~~~starting Tainbot~~~"));
+
+Error.stackTraceLimit = Infinity;
+let INTER_TIME        = 3600000; // One Hour
+
+logger.title("Starting Tainbot");
 
 let bot = global.bot;
 bot.loginWithToken(Auth.token);
 
-setInterval(function () {
+setInterval(function checkUpdateInterval() {
     utils.checkForStatsUpdate();
     reminders.loadReminders();
 }, INTER_TIME);//once an hour * minute * milli
 
-bot.on("ready",   function () {utils.botReadyFunc();});
-bot.on("message", function (message) {utils.botMessageFunc(message);});
+bot.on("ready", function botReadyFunc(){
+    utils.checkForStatsUpdate();
+    reminders.loadReminders();
+    logger.log("ready!\n");
+});
+
+bot.on("message", function botMessageFunc(message) {
+    if (message.content[0] !== "!" ||   //if 1st char isn't '!' return
+        message.author.bot) {           //or if sender is a bot
+        return;
+    }
+    utils.evaluateCommand(message);
+});
+
+bot.on("error", logger.error);

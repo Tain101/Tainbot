@@ -3,7 +3,7 @@
 "use strict";
 let STAT_FILE = "owStatsJson.json";
 
-let fs        = require('fs'); //filesystem
+let fs        = require('fs-extra'); //filesystem
 let request   = require('request');
 
 let bot = global.bot;
@@ -64,24 +64,24 @@ function setOwStats(author, bnet) {
 };
 
 function updateOwStats() {
-    console.log("time to update stats!");
+    logger.log("time to update stats!");
     let owStatsJson = null;
     let data        = fs.readFileSync(STAT_FILE, "utf8");
     owStatsJson     = JSON.parse(data);
 
     for (let user in owStatsJson) {
         request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user] + "/refresh", function callback(err, httpResponse, body) {
-            console.log(httpResponse.statusCode);
+            logger.log("response: " + httpResponse.statusCode);
             if(err){
-                console.log("err: "  + err);
-                console.log("body: " + body);
+                logger.error("err: "  + err);
+                logger.error("body: " + body);
             }
         });
         request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user] + "/update", function callback(err, httpResponse, body) {
-            console.log(httpResponse.statusCode);
+            logger.log("response: " + httpResponse.statusCode);
             if(err){
-                console.log("err: "  + err);
-                console.log("body: " + body);
+                logger.error("err: "  + err);
+                logger.error("body: " + body);
             }
         });
     }

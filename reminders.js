@@ -1,5 +1,5 @@
 "use strict";
-let fs     = require('fs');
+let fs     = require('fs-extra'); //filesystem
 let chrono = require('chrono-node');
 
 let MIN_TIMEOUT_DUR = 93600000;//26*60*60*1000 hours * minutes * millliseconds
@@ -40,8 +40,7 @@ let Reminder = function (time, message, channel, verify) {
 function saveReminder(reminder){
     deleteReminder(reminder);//delete all previous entries for this reminder so user can upDate().
     reminderList.push(reminder);
-    console.log("writing:");
-    console.log(reminderList);
+    logger.log("writing reminder: " + reminder);
     fs.writeFileSync(REMINDER_FILE, JSON.stringify(reminderList), "utf8");
 };
 
@@ -84,15 +83,15 @@ function createReminder (message, args) {
     let remindVerify  = if(message.contains("-verify"));
     */
     if(!remindChannel){
-        console.log("Ive messed up and this doesnt make sense, no channel");
+        logger.warn("Ive messed up and this doesnt make sense, no channel");
         return false;
     }
     if(!remindTime){
-        console.log("I coulnd't parse that time!");
+        logger.warn("I coulnd't parse that time!");
         return false;
     }
     if(!remindMessage){
-        console.log("I coulding find the message you wanted me to remind u");
+        logger.warn("I coulding find the message you wanted me to remind u");
         return false;
     }
 

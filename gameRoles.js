@@ -14,14 +14,12 @@ let gameRole = function(message, args) {
 
     let server     = message.server;
     let roles      = server.roles;
-    console.log(roles.length);
+    logger.log("gameRole.roles.length: " + roles.length);
     let roleString = args[1].toLowerCase();
-    console.log("roleString");
-    console.log(roleString);
+    logger.log("gameRole.roleString: " + roleString);
     let role       = null;
     let userPerms  = message.author;
-    console.log("message.author");
-    console.log(message.author.username);
+    logger.log("gameRole.message.author.username: " + message.author.username);
 
     //get role
     for (var i = 0; i < roles.length; i++) {
@@ -45,26 +43,26 @@ let gameRole = function(message, args) {
     if(args[0] === "join"){
         bot.addMemberToRole(message.author, role, function(error){
             if(error){
-                console.log(colors.red("Join error: " + error));
-                console.log(colors.red(error.stack));
-                console.log(colors.yellow(message.author));
-                console.log(colors.yellow(role));
+                logger.error("Join error: " + error + "\n" + error.stack);
+                logger.warnd(message.author);
+                logger.warnd(role);
             }
         });
     } else if(args[0] === "leave"){
         bot.removeMemberFromRole(message.author, role, function(error){
             if(error){
-                console.log("leave error: " + error);
-                console.log(args + roles + role);
+                logger.error("leave error: " + error);
+                logger.warn("args + roles + role: " + args + ":" + roles + ":" + role);
             }
         });
     } else if(args[0] === "list"){
         let message = "users in: `"+ role.name +"` \n" + "```\n";
         let userList = server.usersWithRole(role);
-        console.log(args + ":" + role.name);
-        console.log(userList);
+        logger.log("args + role.name: " + args + ":" + role.name);
+        logger.log("userList:");
+        logger.log(userList);
         for (var userObj in userList) {
-            console.log(userObj);
+            logger.log(userObj);
             message += userList[userObj].username + '\n';
         }
 

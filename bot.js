@@ -11,9 +11,8 @@ let on = function (event, call) {
 };
 
 let sendMessage = function (channel, content, options, callback) {
-    console.log("sending message!");
-    console.log("channel: " + channel);
-    console.log("content:\n" + content);
+    logger.log("sending message!");
+    logger.table([channel, content], ["channel", "content"])
 
     discordBot.sendMessage(channel, content, options, callback);
 };

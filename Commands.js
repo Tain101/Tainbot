@@ -3,7 +3,7 @@ let Discord   = require("discord.js");
 let owStats   = require('./owStats.js');
 let gameRoles = require('./gameRoles.js');
 let reminders = require('./reminders.js');
-let langList  = require('./langList.js');
+let logger    = require('./logger.js');
 let colors    = require('colors/safe');
 
 let bot = global.bot;
@@ -73,7 +73,7 @@ let Commands = {
             description: "lets you send a message in a given text color",
             permissionsReq: {administrator: true},
             call: function (message) {
-                let languageList = langList.list;
+                let languageList = logger.langList;
                 for (var i = 0; i < languageList.length; i++) {
                     let testText = "```" + languageList[i] + "\n" +
                                    "test test test" + languageList[i] + "\n" +
@@ -199,7 +199,7 @@ function moveUsersToGame(message) {
             messageToSend += "I found this channel: `" + gameChannel.name + "`\n";
             for (let i = 0; i < userList.length; i++) {
                 bot.moveMember(userList[i], gameChannel, (function(err) {
-                    if (err) logger.error(err);
+                    if (err) logger.error(err, err);
                 }));
             }
         }

@@ -3,7 +3,7 @@ let fs       = require('fs-extra');
 let colors   = require('colors/safe');
 let cliTable = require('cli-table');
 
-let langList = = {
+let langList = {
     blue              : "brainfuck",
     blueFirstEachLine : "haskell",
     greenFirstEachLine: "apache",
@@ -26,9 +26,10 @@ function warn(message) {
     internalLog(message, LOG_LEVEL.WARNING);
 };
 
-function error(message) {
+function error(message, error) {
     message = " Error: " + message;
     internalLog(message, LOG_LEVEL.ERROR);
+    internalLog(error.stack, LOG_LEVEL.WARNING);
 };
 
 function table(data, columnTitles, level) {
@@ -53,6 +54,7 @@ function clear() {
 };
 
 function internalLog(message, level) {
+    if(!message) return;
     if(CONSOLE_LEVEL >= level){
         console.log(LOG_STYLE[level](message));
     }

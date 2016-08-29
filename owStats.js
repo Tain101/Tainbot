@@ -73,14 +73,14 @@ function updateOwStats() {
         request.post("https://www.overbuff.com/players/pc/" + owStatsJson[user] + "/refresh", function callback(err, httpResponse, body) {
             logger.log("response: " + httpResponse.statusCode);
             if(err){
-                logger.error("err: "  + err);
+                logger.error("err: "  + err, err);
                 logger.error("body: " + body);
             }
         });
         request.post("http://masteroverwatch.com/profile/pc/us/" + owStatsJson[user] + "/update", function callback(err, httpResponse, body) {
             logger.log("response: " + httpResponse.statusCode);
             if(err){
-                logger.error("err: "  + err);
+                logger.error("err: "  + err, err);
                 logger.error("body: " + body);
             }
         });

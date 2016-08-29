@@ -43,7 +43,7 @@ let gameRole = function(message, args) {
     if(args[0] === "join"){
         bot.addMemberToRole(message.author, role, function(error){
             if(error){
-                logger.error("Join error: " + error + "\n" + error.stack);
+                logger.error("Join error: " + error, error);
                 logger.warnd(message.author);
                 logger.warnd(role);
             }
@@ -51,7 +51,7 @@ let gameRole = function(message, args) {
     } else if(args[0] === "leave"){
         bot.removeMemberFromRole(message.author, role, function(error){
             if(error){
-                logger.error("leave error: " + error);
+                logger.error("leave error: " + error, error);
                 logger.warn("args + roles + role: " + args + ":" + roles + ":" + role);
             }
         });

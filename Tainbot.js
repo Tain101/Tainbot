@@ -21,6 +21,7 @@ bot.loginWithToken(Auth.token);
 setInterval(function checkUpdateInterval() {
     utils.checkForStatsUpdate();
     reminders.loadReminders();
+    Commands.Commands["setGame"].call();
 }, INTER_TIME);//once an hour * minute * milli
 
 bot.on("ready", function botReadyFunc(){

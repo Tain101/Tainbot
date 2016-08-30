@@ -77,7 +77,12 @@ let Commands = {
                     "#define true (math.rand() > 0.5)",
                     ""
                 ];
-                args = args || gameList[Math.trunc(Math.random()*gameList.length)]; //TODO: random funny games
+                if(args){
+                    args = args.toString();
+                }else{
+                    args = gameList[Math.trunc(Math.random()*gameList.length)];
+                }
+
                 logger.log(message.author.id);
                 logger.log("setGame: " + args);
                 let flag = true;

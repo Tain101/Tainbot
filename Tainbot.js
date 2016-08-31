@@ -8,6 +8,7 @@ let Auth      = require('./auth.json');
 let reminders = require('./reminders.js');
 let utils     = require('./utils.js');
 let logger    = require('./logger.js');
+let Commands  = require('./Commands.js');
 
 
 Error.stackTraceLimit = Infinity;

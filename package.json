@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "discord.js": "",
-    "colors": "",
+    "chrono-node": "",
     "cli-table": "",
-    "request": "",
+    "colors": "",
+    "discord.js": "hydrabolt/discord.js#indev",
     "fs-extra": "",
-    "chrono-node": ""
+    "request": ""
   }
 }

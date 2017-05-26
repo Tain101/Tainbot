@@ -1,11 +1,10 @@
-//running using 'nodemon' package
-//nodemon Tainbot.js
+//running using 'forever' & nodemon packages
+//forever -c nodemon -a -l TainbotForever.log /home/tain/Tainbot/Tainbot.js
 "use strict";
 let colors    = require('colors/safe');
 
 global.bot    = require('./bot.js');
 let Auth      = require('./auth.json');
-let reminders = require('./reminders.js');
 let utils     = require('./utils.js');
 let logger    = require('./logger.js');
 let Commands  = require('./Commands.js');
@@ -21,13 +20,11 @@ bot.loginWithToken(Auth.token);
 
 setInterval(function checkUpdateInterval() {
     utils.checkForStatsUpdate();
-    reminders.loadReminders();
     Commands.Commands["setGame"].call();
 }, INTER_TIME);//once an hour * minute * milli
 
 bot.on("ready", function botReadyFunc(){
     utils.checkForStatsUpdate();
-    reminders.loadReminders();
     logger.log("ready!\n");
 });
 
@@ -39,4 +36,11 @@ bot.on("message", function botMessageFunc(message) {
     utils.evaluateCommand(message);
 });
 
-bot.on("error", logger.error);
+bot.on("disconnected", function botDiscFunc() {
+    bot.destroy(logger.error);
+})
+
+bot.on("error", function botErrorFunc(error){
+    logger.error(error);
+    bot.destroy(logger.error);
+});

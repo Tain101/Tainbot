@@ -2,7 +2,6 @@
 let Discord   = require("discord.js");
 let owStats   = require('./owStats.js');
 let gameRoles = require('./gameRoles.js');
-let reminders = require('./reminders.js');
 let logger    = require('./logger.js');
 let colors    = require('colors/safe');
 
@@ -19,11 +18,6 @@ let Commands = {
                          "use set bnet#0000 to link your account.\n" +
                          "linking you account will update your overbuff page daily!",
             call: function(message, args){ owStats.owStats(message, args)},
-        },
-        "remind":{
-            description: "HEAVY WIP!!!! \n" +
-                         "returns a message to the user at a given time.",
-            call: function(message, args){ reminders.createReminder(message, args)},
         },
         "role":{
             description: "!role join -  join the role!\n" +
@@ -83,8 +77,13 @@ let Commands = {
                     args = gameList[Math.trunc(Math.random()*gameList.length)];
                 }
 
-                logger.log(message.author.id);
-                logger.log("setGame: " + args);
+                try{
+                    logger.log(message.author.id);
+                }catch(err){
+                    logger.error(err);
+                }
+                logger.log("setGame: ");
+                logger.log(args);
                 let flag = true;
 
                 bot.setPlayingGame(args, function(err) {

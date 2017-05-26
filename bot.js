@@ -23,7 +23,11 @@ let moveMember = function (user, channel, callback) {
 };
 
 let setPlayingGame = function (game, callback) {
-    discordBot.setPlayingGame(game, callback);
+    try{
+        discordBot.setPlayingGame(game, callback);
+    }catch(err){
+        logger.error(err);
+    }
 };
 
 let addMemberToRole = function (member, role, callback) {
@@ -34,6 +38,10 @@ let removeMemberFromRole = function (member, role, callback) {
     discordBot.removeMemberFromRole(member, role, callback);
 };
 
+let destroy = function (callback) {
+    discordBot.destroy(callback);
+}
+
 this.discordBot           = discordBot;
 this.loginWithToken       = loginWithToken;
 this.on                   = on;
@@ -42,3 +50,4 @@ this.moveMember           = moveMember;
 this.setPlayingGame       = setPlayingGame;
 this.addMemberToRole      = addMemberToRole;
 this.removeMemberFromRole = removeMemberFromRole;
+this.destroy              = destroy;

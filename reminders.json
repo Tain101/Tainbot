@@ -1,1 +1,0 @@
-[{"time":[{"ref":"2016-08-11T03:56:55.628Z","index":0,"text":"thurs","tags":{},"start":{"knownValues":{"weekday":4},"impliedValues":{"day":11,"month":8,"year":2016,"hour":12,"minute":0,"second":0,"millisecond":0}}}],"message":"\"test,reminder\"","channel":"197079909645025280","verify":false,"timeout":null}]

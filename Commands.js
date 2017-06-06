@@ -110,6 +110,14 @@ let Commands = {
                 }
             }
         },
+        "d":{
+            description: "!d add {name} {freq} {offset} - add new daily\n" +
+                         "!d list                       - list all daily and their id's\n" +
+                         "!d set {id} {true, false}     - set a daily true/false\n" +
+                         "!d hist {id}                  - show history for a given daily",
+            permissionsReq: {administrator: true},
+            call: function(message, args){ dailies.daily(message, args)},
+        }
 };
 
 function helpMessageFunc(message, args) {

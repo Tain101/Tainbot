@@ -33,3 +33,5 @@ The result is syncing of changes when they're made on [Glitch](https://glitch.co
   Make sure it's executable using `chmod +x post-commit`.
 
 - Update the pull request URL in `git.sh` to pull from your own repo.
+
+- Make your project private so your .git-credentials can't be remixed.

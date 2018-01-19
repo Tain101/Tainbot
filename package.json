@@ -1,10 +1,17 @@
 {
+  "name": "discord-1337-bot",
+  "version": "0.0.1",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
-    "chrono-node": "",
-    "cli-table": "",
-    "colors": "",
-    "discord.js": "hydrabolt/discord.js#indev",
-    "fs-extra": "",
-    "request": ""
+    "discord.js": "",
+    "express": "",
+    "request":"",
+    "fs-extra":""
+  },
+  "engines": {
+    "node": "8.x"
   }
 }

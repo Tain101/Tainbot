@@ -1,5 +1,0 @@
-auth.json
-sftp-config.json
-*.log
-node_modules/**/**
-logs/

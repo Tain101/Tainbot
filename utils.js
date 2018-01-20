@@ -1,22 +1,10 @@
 //utils.js
 const fs = require('fs-extra'); //filesystem
 
-
-const LISTS_JSON = __dirname  + '/lists.json';
-const data       = fs.readFileSync(LISTS_JSON, "utf8");
-const lists      = JSON.parse(data);
-
-const updateLists = function updateLists(){
-	fs.writeFileSync(LISTS_JSON, JSON.stringify(lists), "utf8");
-}
-
 const writeFile = function writeFile(filename, contents){
   fs.writeFileSync(filename, contents, "utf8");
 }
 
-const getLists = function getLists(){
-  return lists;
-};
 
 const getRandomItem = function getRandomItem(list){
     return list[Math.floor(Math.random() * list.length)];
@@ -45,12 +33,12 @@ const readJSON = function readJSON(jsonFile){
     return JSON.parse(data);
 }
 
-const writeJSON = function writeJSON(){
-
+const writeJSON = function writeJSON(jsonFile, data){
+    const string = JSON.stringify(data, undefined, '\t');
+    fs.writeFileSync(jsonFile, string, "utf8");
 }
 
 module.exports.checkPermissions = checkPermissions;
-module.exports.getLists         = getLists;
 module.exports.getRandomItem    = getRandomItem;
 module.exports.writeFile        = writeFile;
 module.exports.readJSON         = readJSON;

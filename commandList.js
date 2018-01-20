@@ -1,6 +1,6 @@
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
 const utils     = require(__dirname  + '/utils.js');
-const reactions = utils.readJSON(__dirname  + '/reactions.json');
+// let reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 const commandList = {
   'help':{
@@ -22,7 +22,7 @@ const commandList = {
       embed.title = 'Reactions';
       embed.description = 'the following commands will reply with a random reaction based on the given keyword.\n';
       embed.fields = [];
-      for (const react in reactions){
+      for (const react in global.reactions){
         embed.description += `**${react}**, `;
       }
 
@@ -71,10 +71,15 @@ const commandList = {
     description: `adds a new reaction option\n usage: !addreaction [keyword] [reaction text/image]`,
     requiredPermissions: ['ADMINISTRATOR'],
     call: (message) => {
-      const key = message.content.split(' ')[1].slice('!').toLowerCase();
-      const reaction = message.content.split(key)[1];
+      let reactions = global.reactions || utils.readJSON(__dirname  + '/reactions.json');
+
+      const key = message.content.split(' ')[1].toLowerCase();
+      const reaction = message.content.slice(message.content.indexOf(key)).slice(key.length);
+      //str.slice(str.indexOf("welcome")).slice("welcome".length);
+
       reactions[key].push(reaction);
       utils.writeJSON('reactions.json', reactions);
+      global.reactions = utils.readJSON(__dirname  + '/reactions.json');
     }
   }
 };

@@ -1,9 +1,11 @@
 const utils = require(__dirname  + '/utils.js');
 
 const commands  = require(__dirname  + '/commandList.js');
-const reactions = utils.readJSON(__dirname  + '/reactions.json');
-
-const prefix = '!';
+global.reactions = utils.readJSON(__dirname  + '/reactions.json');
+console.log('reactions loaded');
+console.log(reactions["bully"]);
+global.prefix = '.';
+const prefix = global.prefix;
 const evaluate = function evaluate(message){
 	if(!message.content.startsWith(prefix)) return;
 	if(message.author.bot) return;

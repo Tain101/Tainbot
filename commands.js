@@ -1,7 +1,7 @@
 const utils = require(__dirname  + '/utils.js');
 
 const commands  = require(__dirname  + '/commandList.js');
-const reactions = utils.readJSON('reactions.json');
+const reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 const prefix = '!';
 const evaluate = function evaluate(message){
@@ -17,12 +17,10 @@ const evaluate = function evaluate(message){
 	}
 
 	const command = commands[key];
-	const permissionsNeeded = command.permissions;
+    if(!command) return;
 
-	if( !command
-		|| !checkPermissions(message, permissionsNeeded)) {
-		return;
-	}
+	const permissionsNeeded = command.permissions;
+	if(!checkPermissions(message, permissionsNeeded)) return;
 
 	command.call(message);
 };

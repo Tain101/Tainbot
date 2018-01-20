@@ -1,5 +1,6 @@
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
-const utils = require(__dirname  + '/utils.js');
+const utils     = require(__dirname  + '/utils.js');
+const reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 const commandList = {
   'help':{
@@ -16,16 +17,17 @@ const commandList = {
           embed.fields.push({'name': command, 'value': commandList[command].description});
         }
       }
-      let reactionsString = '';
-      for (const react in reactions){
-        reactionsString += ` ${react}\n`;
-      }
-      let reactionsField = {
-        'name': 'reactions',
-        'value': `the following commands will reply with a random reaction based on the given keyword.\n\`\`\`\n ${reactionsString} \`\`\``;
-      }
-      embed.fields.push(reactionsField)
       message.reply('', {embed});
+
+      embed.title = 'Reactions';
+      embed.description = 'the following commands will reply with a random reaction based on the given keyword.\n';
+      embed.fields = [];
+      for (const react in reactions){
+        embed.description += `**${react}**, `;
+      }
+
+      message.channel.send({embed});
+
     },
   },
   'ping':{
@@ -69,7 +71,7 @@ const commandList = {
     description: `adds a new reaction option\n usage: !addreaction [keyword] [reaction text/image]`,
     requiredPermissions: ['ADMINISTRATOR'],
     call: (message) => {
-      const key = message.content.split(' ')[1].slice(prefix.length).toLowerCase();
+      const key = message.content.split(' ')[1].slice('!').toLowerCase();
       const reaction = message.content.split(key)[1];
       reactions[key].push(reaction);
       utils.writeJSON('reactions.json', reactions);

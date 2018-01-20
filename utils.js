@@ -40,7 +40,18 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
     }
 }
 
+const readJSON = function readJSON(jsonFile){
+    const data  = fs.readFileSync(jsonFile, "utf8");
+    return JSON.parse(data);
+}
+
+const writeJSON = function writeJSON(){
+
+}
+
 module.exports.checkPermissions = checkPermissions;
 module.exports.getLists         = getLists;
 module.exports.getRandomItem    = getRandomItem;
 module.exports.writeFile        = writeFile;
+module.exports.readJSON         = readJSON;
+module.exports.writeJSON        = writeJSON;

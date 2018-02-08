@@ -1,5 +1,7 @@
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
 const utils     = require(__dirname  + '/utils.js');
+const logger     = require(__dirname  + '/logger.js');
+const wolfram     = require(__dirname  + '/wolfram.js');
 // let reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 const commandList = {
@@ -107,12 +109,16 @@ const commandList = {
   'info':{
     // description: `adds a new reaction option\n usage: ${global.prefix}addreaction [keyword] [reaction text/image]`,
     // requiredPermissions: ['ADMINISTRATOR'],
-    call: (message) => {}
+    call: (message) => {
+      logger.info(message);
+    }
   },
   'wf':{
     description: `asks wolfram a question`,
     // requiredPermissions: ['ADMINISTRATOR'],
-    call: (message) => {}
+    call: (message) => {
+      wolfram(message);
+    }
   }
 };
 

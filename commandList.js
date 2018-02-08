@@ -1,5 +1,6 @@
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
-const utils = require(__dirname  + '/utils.js');
+const utils     = require(__dirname  + '/utils.js');
+// let reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 const commandList = {
   'help':{
@@ -16,16 +17,17 @@ const commandList = {
           embed.fields.push({'name': command, 'value': commandList[command].description});
         }
       }
-      let reactionsString = '';
-      for (const react in reactions){
-        reactionsString += ` ${react}\n`;
-      }
-      let reactionsField = {
-        'name': 'reactions',
-        'value': `the following commands will reply with a random reaction based on the given keyword.\n\`\`\`\n ${reactionsString} \`\`\``;
-      }
-      embed.fields.push(reactionsField)
       message.reply('', {embed});
+
+      embed.title = 'Reactions';
+      embed.description = 'the following commands will reply with a random reaction based on the given keyword.\n';
+      embed.fields = [];
+      for (const react in global.reactions){
+        embed.description += `**${react}**, `;
+      }
+
+      message.channel.send({embed});
+
     },
   },
   'ping':{
@@ -66,14 +68,51 @@ const commandList = {
     },
   },
   'addreaction':{
-    description: `adds a new reaction option\n usage: !addreaction [keyword] [reaction text/image]`,
+    description: `adds a new reaction option\n usage: ${global.prefix}addreaction [keyword] [reaction text/image]`,
     requiredPermissions: ['ADMINISTRATOR'],
     call: (message) => {
-      const key = message.content.split(' ')[1].slice(prefix.length).toLowerCase();
-      const reaction = message.content.split(key)[1];
-      reactions[key].push(reaction);
+      //TODO prevent duplicates
+      //TODO allow direct image upload
+      //TODO allow lists/mass additions
+      //TODO reply with confirmation of images added
+      let reactions = global.reactions || utils.readJSON(__dirname  + '/reactions.json');
+
+      let count = 0;
+      const args = message.content.split(' ');
+      const key = args[1].toLowerCase();
+      let attachmentsArray = message.attachments.array();
+      // const reaction = message.content.slice(message.content.indexOf(key)).slice(key.length).trim();
+      //str.slice(str.indexOf("welcome")).slice("welcome".length);
+      // console.log(`${message.author} added a ${key} reaction: ${reaction}`)
+      if(!reactions[key]){
+        reactions[key] = [];
+      }
+      for(const attachment in attachmentsArray){
+        reactions[key].push(attachment.url);
+        console.log(attachment.url);
+        count += 1;
+      }
+      for(let i = 2; i<args.length; i++){
+        reactions[key].push(args[i]);
+        console.log(args[i]);
+        count += 1;
+      }
+      // reactions[key].push(reaction);
       utils.writeJSON('reactions.json', reactions);
+      global.reactions = utils.readJSON(__dirname  + '/reactions.json');
+      message.reply(`added ${count} to ${key}`);
+      console.log(`${message.author} added ${count} to ${key}`);
     }
+  },
+  'info':{
+    // description: `adds a new reaction option\n usage: ${global.prefix}addreaction [keyword] [reaction text/image]`,
+    // requiredPermissions: ['ADMINISTRATOR'],
+    call: (message) => {}
+  },
+  'wf':{
+    description: `asks wolfram a question`,
+    // requiredPermissions: ['ADMINISTRATOR'],
+    call: (message) => {}
   }
 };
 

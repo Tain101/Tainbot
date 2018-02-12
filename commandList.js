@@ -38,7 +38,7 @@ const commandList = {
   },
   'setgame':{
     description: 'set\'s the game I play!',
-    requiredPermissions: ['ADMINISTRATOR'],
+    requiredPermissions: [false],
     call: (message) => {
       const gameList = [
         "Tetris or something",

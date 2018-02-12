@@ -1,6 +1,5 @@
 const Discord     = require('discord.js');
 const client      = new Discord.Client({autoReconnect:true});
-const commandList = require(__dirname  + '/commandList.js');
 const commands = require(__dirname  + '/commands.js');
 const utils = require(__dirname  + '/utils.js');
 const logger = require(__dirname  + '/logger.js');
@@ -8,11 +7,11 @@ const logger = require(__dirname  + '/logger.js');
 
 client.on('ready', () => {
   logger.info(`Logged in as ${client.user.tag}!`);
+  const commandCount = commands.loadCommands();
+  logger.info(`loaded ${commandCount} commands!`);
 });
 
 client.on('message', (message) => {
-
-
   commands.evaluate(message);
 });
 

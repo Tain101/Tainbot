@@ -6,8 +6,6 @@ const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 global.whitelist = utils.readJSON(__dirname + '/whitelist.json');
 let whitelist = global.whitelist;
-// console.log('reactions loaded');
-// console.log(global.reactions);
 global.prefix = '.';
 const prefix = global.prefix;
 const evaluate = function evaluate(message){
@@ -44,17 +42,24 @@ const evaluate = function evaluate(message){
 
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
 const checkPermissions = function checkPermissions(message, requiredPermissions){
-
-  if(!requiredPermissions){
-    return true;
-  }
+  
   if(!message.member){
     return false;
   }
-
+  
+  const command = message.content.split(' ')[0];
+  
+  if(!requiredPermissions
+    || whitelist.global.contains(command)
+    || whitelist.channels[message.channel.id].contains(command)
+    || whitelist.users[message.user.id].contains(command)){
+    return true;
+  }
+  
 
   // console.log(requiredPermissions);
   try{
+    
     return message.member.hasPermission(requiredPermissions, false, false, false);
   }catch(err){
     logger.warn("error" + err);

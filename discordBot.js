@@ -1,31 +1,40 @@
 const Discord     = require('discord.js');
 const client      = new Discord.Client({autoReconnect:true});
-const commandList = require(__dirname  + '/commandList.js');
 const commands = require(__dirname  + '/commands.js');
 const utils = require(__dirname  + '/utils.js');
+const logger = require(__dirname  + '/logger.js');
 
-// import { commandList } from (__dirname  + '/commandList.js');
-// console.log(commandList);
 
 client.on('ready', () => {
-	console.log(`Logged in as ${client.user.tag}!`);
+  logger.info(`Logged in as ${client.user.tag}!`);
+  const commandCount = commands.loadCommands();
+  logger.info(`loaded ${commandCount} commands!`);
 });
 
 client.on('message', (message) => {
-
-
-	commands.evaluate(message);
+  commands.evaluate(message);
 });
 
 client.on('disconnected', function botDiscFunc() {
-	utils.writeFile(`logs/${Date.now()}.log`);
-	client.destroy();
+  // utils.writeFile(__dirname + `/logs/${Date.now()}.txt`, 'disconnected');
+  client.destroy();
 })
 
 client.on('error', function botErrorFunc(error){
-	utils.writeFile(`logs/${Date.now()}.log`);
-	console.error(error);
-	client.destroy();
+  // utils.writeFile(__dirname + `/logs/${Date.now()}.txt`, error);
+  logger.crit(error);
+  client.destroy();
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
+
+
+//https://glitch.com/edit/#!/deltabot
+process.on('uncaughtException', function (err) {
+  logger.info(`${client ? 'SH ' + client.id + ' ' : ''}Fatal Error!\n`, err)
+  if (client) {
+    // client.broadcastEval('process.exit()')
+    // client.sent('kill')
+  }
+  process.exit()
+})

@@ -1,5 +1,7 @@
 //utils.js
 const fs = require('fs-extra'); //filesystem
+const path = require('path');
+const logger = require(__dirname + '/logger.js');
 
 const writeFile = function writeFile(filename, contents){
   fs.writeFileSync(filename, contents, "utf8");
@@ -19,18 +21,25 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
         return false;
     }
 
-    console.error(requiredPermissions);
-    console.log(requiredPermissions);
+    // logger.crit(requiredPermissions);
+    // logger.info(requiredPermissions);
     try{
         return message.member.hasPermission(requiredPermissions, false, true, true);
     }catch(err){
-        return console.log(err);
+        return logger.info(err);
     }
 }
 
 const readJSON = function readJSON(jsonFile){
+
+  try{
     const data  = fs.readFileSync(jsonFile, "utf8");
     return JSON.parse(data);
+  }catch(err){
+    logger.warn(`could not read jsonFile ${jsonFile}`);
+    logger.warn(`${err.stack}`);
+  }
+
 }
 
 const writeJSON = function writeJSON(jsonFile, data){

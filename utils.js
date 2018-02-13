@@ -1,5 +1,6 @@
 //utils.js
 const fs = require('fs-extra'); //filesystem
+const path = require('path');
 const logger = require(__dirname + '/logger.js');
 
 const writeFile = function writeFile(filename, contents){
@@ -30,8 +31,13 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
 }
 
 const readJSON = function readJSON(jsonFile){
+  try{
     const data  = fs.readFileSync(jsonFile, "utf8");
     return JSON.parse(data);
+  }catch(err){
+    logger.warn(`could not read jsonFile ${jsonFile}`);
+    logger.warn(`${err.stack}`);
+  }
 }
 
 const writeJSON = function writeJSON(jsonFile, data){

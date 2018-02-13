@@ -1,13 +1,27 @@
+const fs = require('fs');
 const utils = require(__dirname  + '/utils.js');
 const logger = require(__dirname  + '/logger.js');
-
-
 const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 global.whitelist = utils.readJSON(__dirname + '/whitelist.json');
 let whitelist = global.whitelist;
 global.prefix = '.';
 const prefix = global.prefix;
+let commandList = {};
+
+
+
+const loadCommands = function(){
+// directory();
+  let files = fs.readdirSync(__dirname + '/commands/');
+  for(const file in files){
+    logger.info(files[file]); 
+    const command = require(__dirname + '/commands/' + files[file]);
+    commandList[command.name] = command;
+  }
+};
+
+
 const evaluate = function evaluate(message){
   if(!message.content.startsWith(prefix)) return;
   if(message.author.bot) return;
@@ -21,16 +35,8 @@ const evaluate = function evaluate(message){
   }
 
   const command = commands[key];
-    if(!command) return;
-
-  const authorID = message.author.id;
-  if(authorID === process.env.OWNER_ID){
-    command.call(message);
-    return;
-  }
-  
-  if(whitelist[authorID] && whitelist[authorID][key]){
-    command.call(message);
+  if(!command){
+    message.channel.say(`command does not exist, type ${global.prefix}help for available commands.`);
     return;
   }
 
@@ -43,7 +49,13 @@ const evaluate = function evaluate(message){
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
 const checkPermissions = function checkPermissions(message, requiredPermissions){
   
-  if(!message.member){
+  //owner overrides everything
+  if(message.user.id === process.env.OWNER_ID){
+      return true;
+  }
+  
+  if(!message.member
+   || requiredPermissions === false){
     return false;
   }
   
@@ -88,3 +100,4 @@ const react = function replyFromList(message, list){
 };
 
 module.exports.evaluate = evaluate;
+module.exports.loadCommands = loadCommands;

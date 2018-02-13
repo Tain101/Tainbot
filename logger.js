@@ -15,11 +15,11 @@ const myCustomLevels = {
   },
   colors: {
     trace: 'white',
-  debug: 'green',
-  info: 'blue',
-  warn: 'yellow',
-  crit: 'red',
-  fatal: 'red'
+    debug: 'green',
+    info: 'blue',
+    warn: 'yellow',
+    crit: 'red',
+    fatal: 'red'
   }
 };
 

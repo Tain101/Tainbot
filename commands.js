@@ -3,12 +3,12 @@ const utils = require(__dirname  + '/utils.js');
 const logger = require(__dirname  + '/logger.js');
 const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
+
 global.whitelist = utils.readJSON(__dirname + '/whitelist.json');
 let whitelist = global.whitelist;
 global.prefix = '.';
 const prefix = global.prefix;
 let commandList = {};
-
 
 
 const loadCommands = function(){
@@ -22,6 +22,7 @@ const loadCommands = function(){
 };
 
 
+
 const evaluate = function evaluate(message){
   if(!message.content.startsWith(prefix)) return;
   if(message.author.bot) return;
@@ -33,7 +34,6 @@ const evaluate = function evaluate(message){
     react(message, reactions[key]);
     return;
   }
-
   const command = commands[key];
   if(!command){
     message.channel.say(`command does not exist, type ${global.prefix}help for available commands.`);

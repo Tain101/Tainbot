@@ -31,6 +31,7 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
 }
 
 const readJSON = function readJSON(jsonFile){
+
   try{
     const data  = fs.readFileSync(jsonFile, "utf8");
     return JSON.parse(data);
@@ -38,6 +39,7 @@ const readJSON = function readJSON(jsonFile){
     logger.warn(`could not read jsonFile ${jsonFile}`);
     logger.warn(`${err.stack}`);
   }
+
 }
 
 const writeJSON = function writeJSON(jsonFile, data){

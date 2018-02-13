@@ -2,6 +2,7 @@
 const utils     = require(__dirname  + '/utils.js');
 const logger     = require(__dirname  + '/logger.js');
 const wolfram     = require(__dirname  + '/wolfram.js');
+
 // let reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 const commandList = {

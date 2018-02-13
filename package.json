@@ -11,7 +11,8 @@
     "request":"",
     "fs-extra":"",
     "winston":"",
-    "node-wolfram":""
+    "node-wolfram":"",
+    "is-url":""
   },
   "engines": {
     "node": "8.x"

@@ -1,6 +1,8 @@
 const fs = require('fs');
+const isURL = require('is-url');
 const utils = require(__dirname  + '/utils.js');
 const logger = require(__dirname  + '/logger.js');
+
 // const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 
@@ -58,8 +60,12 @@ const evaluate = function evaluate(message){
 
 	const permissionsNeeded = command.requiredPermissions;
 	if(!checkPermissions(message, permissionsNeeded)) return;
-
-	command.call(message);
+  try{
+	  command.call(message);
+  }catch(err){
+    logger.warn(`${message.author.id} tried to call ${command.name}`);
+    logger.warn(err.stack);
+  }
 };
 
 //https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
@@ -77,7 +83,8 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
 
 
 	const command = message.content.split(' ')[0];
-	if(requiredPermissions.length === 0
+	if(requiredPermissions === undefined
+    || requiredPermissions.length === 0
 		|| whitelist.global[command]
 		|| whitelist.channels[message.channel.id][command]
 		|| whitelist.users[message.user.id][command]){
@@ -104,17 +111,27 @@ const react = function replyFromList(message, list){
 	//reply to all users mentioned
 	if(mentionList.length){
 		for(const user in mentionList){
-			str += `${mentionList[user]} `;
+			// str += `${mentionList[user]} `;
 			logger.info(`${mentionList[user]}`);
 		}
 	}else{
 		//if nobody is mentioned reply to the author
-		str += `${message.author} `;
+		// str += `${message.author} `;
 	}
 
 	const replyText = utils.getRandomItem(list);
 	str += `${replyText}`;
-	message.channel.send(str);
+  if(isURL(str)){
+    const embed = {
+      "color": message.channel.members.find('id', message.author.id).displayColor,
+      "image": {
+        "url": str
+      }
+    }
+    message.channel.send({embed});
+  }else{
+	  message.channel.send(str);
+  }
 };
 
 module.exports.evaluate = evaluate;

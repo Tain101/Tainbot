@@ -10,7 +10,13 @@ const helpCommand = function helpCommand(message){
 
 	for (const command in global.commandList){
 		if(utils.checkPermissions(message, global.commandList[command].requiredPermissions)){
-			embed.fields.push({'name': command, 'value': global.commandList[command].description});
+      let name = command;
+      if(global.commandList[command].aliasList){
+        for(let i = 0; i < global.commandList[command].aliasList.length; i++){
+          name += ", " + global.commandList[command].aliasList[i];
+        }
+      }
+			embed.fields.push({'name': name, 'value': global.commandList[command].description});
 		}
 	}
 	message.reply('', {embed});

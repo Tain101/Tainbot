@@ -6,24 +6,24 @@ const logger = require(__dirname  + '/logger.js');
 
 
 client.on('ready', () => {
-  logger.info(`Logged in as ${client.user.tag}!`);
-  const commandCount = commands.loadCommands();
-  logger.info(`loaded ${commandCount} commands!`);
+	logger.info(`Logged in as ${client.user.tag}!`);
+	const commandCount = commands.loadCommands();
+	logger.info(`loaded ${commandCount} commands!`);
 });
 
 client.on('message', (message) => {
-  commands.evaluate(message);
+	commands.evaluate(message);
 });
 
 client.on('disconnected', function botDiscFunc() {
-  // utils.writeFile(__dirname + `/logs/${Date.now()}.txt`, 'disconnected');
-  client.destroy();
+	// utils.writeFile(__dirname + `/logs/${Date.now()}.txt`, 'disconnected');
+	client.destroy();
 })
 
 client.on('error', function botErrorFunc(error){
-  // utils.writeFile(__dirname + `/logs/${Date.now()}.txt`, error);
-  logger.crit(error);
-  client.destroy();
+	// utils.writeFile(__dirname + `/logs/${Date.now()}.txt`, error);
+	logger.crit(error);
+	client.destroy();
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
@@ -31,10 +31,10 @@ client.login(process.env.DISCORD_BOT_TOKEN);
 
 //https://glitch.com/edit/#!/deltabot
 process.on('uncaughtException', function (err) {
-  logger.info(`${client ? 'SH ' + client.id + ' ' : ''}Fatal Error!\n`, err)
-  if (client) {
-    // client.broadcastEval('process.exit()')
-    // client.sent('kill')
-  }
-  process.exit()
+	logger.info(`${client ? 'SH ' + client.id + ' ' : ''}Fatal Error!\n`, err)
+	if (client) {
+		// client.broadcastEval('process.exit()')
+		// client.sent('kill')
+	}
+	process.exit()
 })

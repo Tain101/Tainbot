@@ -1,12 +1,17 @@
+const utils = require(__dirname  + '/../utils.js');
 const addReactionCommand = function addReactionCommand(message){
 	//TODO prevent duplicates
 	//TODO allow direct image upload
 	//TODO allow lists/mass additions
 	//TODO reply with confirmation of images added
-	let reactions = global.reactions || utils.readJSON(__dirname  + '/reactions.json');
+	let reactions = global.reactions || utils.readJSON(__dirname  + '/../reactions.json');
 
 	let count = 0;
 	const args = message.content.split(' ');
+  if(args.length < 3){
+    message.reply(`you did it wrong.`);
+    return;
+  };
 	const key = args[1].toLowerCase();
 	let attachmentsArray = message.attachments.array();
 	// const reaction = message.content.slice(message.content.indexOf(key)).slice(key.length).trim();
@@ -26,12 +31,13 @@ const addReactionCommand = function addReactionCommand(message){
 		count += 1;
 	}
 	// reactions[key].push(reaction);
-	utils.writeJSON('reactions.json', reactions);
-	global.reactions = utils.readJSON(__dirname  + '/reactions.json');
+	utils.writeJSON(__dirname  + '/../reactions.json', reactions);
+	global.reactions = utils.readJSON(__dirname  + '/../reactions.json');
 	message.reply(`added ${count} to ${key}`);
 	console.log(`${message.author} added ${count} to ${key}`);
 };
 
+exports.aliasList   = ['ar', 'newReaction'];
 exports.name        = `addreaction`;
 exports.description = `adds a new reaction option\n usage: ${global.prefix}addreaction [keyword] [reaction text/image]`;
 exports.call        = addReactionCommand;

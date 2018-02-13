@@ -1,3 +1,4 @@
+const logger = require(__dirname  + '/../logger.js');
 const printMessageInfo = function printMessageInfo(message){
 	logger.info(message);
 }

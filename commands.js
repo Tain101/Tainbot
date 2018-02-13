@@ -8,18 +8,20 @@ global.whitelist = utils.readJSON(__dirname + '/whitelist.json');
 let whitelist = global.whitelist;
 global.prefix = '.';
 const prefix = global.prefix;
-let commandList = {};
+
 
 
 const loadCommands = function(){
 	// directory();
+  let commandList = {};
 	let files = fs.readdirSync(__dirname + '/commands/');
 	for(const file in files){
 		logger.info(files[file]);
 		const command = require(__dirname + '/commands/' + files[file]);
-		commandList[command.name] = command;
+		commandList[command['name'].toLowerCase()] = command;
 	}
   global.commandList = commandList;
+  
 };
 
 const evaluate = function evaluate(message){
@@ -33,9 +35,24 @@ const evaluate = function evaluate(message){
 		react(message, reactions[key]);
 		return;
 	}
-	const command = commandList[key];
+  
+	let command = global.commandList[key];
+  
+  //check for an alias
 	if(!command){
-		message.channel.say(`command does not exist, type ${global.prefix}help for available commands.`);
+    for(const com in global.commandList){
+      if(global.commandList[com].aliasList){
+        for(let i = 0; i < global.commandList[com].aliasList.length; i++){
+          if(global.commandList[com].aliasList[i].toLowerCase() === key){
+            command = global.commandList[com];
+          }
+        }
+      }
+    }
+  }
+  
+  if(!command){
+		message.channel.send(`command does not exist, type ${global.prefix}help for available commands.`);
 		return;
 	}
 
@@ -49,7 +66,7 @@ const evaluate = function evaluate(message){
 const checkPermissions = function checkPermissions(message, requiredPermissions){
 
 	//owner overrides everything
-	if(message.user.id === process.env.OWNER_ID){
+	if(message.author.id === process.env.OWNER_ID){
 		return true;
 	}
 
@@ -60,7 +77,7 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
 
 
 	const command = message.content.split(' ')[0];
-	if(!requiredPermissions
+	if(requiredPermissions.length === 0
 		|| whitelist.global[command]
 		|| whitelist.channels[message.channel.id][command]
 		|| whitelist.users[message.user.id][command]){

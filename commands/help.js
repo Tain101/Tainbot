@@ -1,5 +1,5 @@
 const utils = require(__dirname  + '/../utils.js');
-const commandList = global.commandList;
+// const commandList = global.commandList;
 
 const helpCommand = function helpCommand(message){
 	let embed = {
@@ -8,9 +8,9 @@ const helpCommand = function helpCommand(message){
 		'fields': []
 	};
 
-	for (const command in commandList){
-		if(utils.checkPermissions(message, commandList[command].requiredPermissions)){
-			embed.fields.push({'name': command, 'value': commandList[command].description});
+	for (const command in global.commandList){
+		if(utils.checkPermissions(message, global.commandList[command].requiredPermissions)){
+			embed.fields.push({'name': command, 'value': global.commandList[command].description});
 		}
 	}
 	message.reply('', {embed});

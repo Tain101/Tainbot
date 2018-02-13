@@ -7,8 +7,7 @@ const logger = require(__dirname  + '/logger.js');
 
 client.on('ready', () => {
 	logger.info(`Logged in as ${client.user.tag}!`);
-	const commandCount = commands.loadCommands();
-	logger.info(`loaded ${commandCount} commands!`);
+	commands.loadCommands();
 });
 
 client.on('message', (message) => {

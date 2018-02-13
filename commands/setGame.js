@@ -1,3 +1,6 @@
+const utils = require(__dirname  + '/../utils.js');
+const logger = require(__dirname  + '/../logger.js');
+
 const setBotGame = function setBotGame(message){
 	const gameList = [
 	"Tetris or something",
@@ -24,12 +27,12 @@ const setBotGame = function setBotGame(message){
 	];
 
 	const gameName = utils.getRandomItem(gameList);
-	console.log(gameName);
+	logger.info(gameName);
 	message.client.user.setPresence({game:{name:gameName}});
 }
 
 exports.name                = 'setGame';
 exports.aliasList           = [];
-exports.description         =  `set's the game I play`,
+exports.description         = `set's the game I play`,
 exports.call                = setBotGame;
 exports.requiredPermissions = false;

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const utils = require(__dirname  + '/utils.js');
 const logger = require(__dirname  + '/logger.js');
-const commands  = require(__dirname  + '/commandList.js');
+// const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 
 global.whitelist = utils.readJSON(__dirname + '/whitelist.json');
@@ -32,7 +32,7 @@ const evaluate = function evaluate(message){
 		react(message, reactions[key]);
 		return;
 	}
-	const command = commands[key];
+	const command = commandList[key];
 	if(!command){
 		message.channel.say(`command does not exist, type ${global.prefix}help for available commands.`);
 		return;
@@ -48,7 +48,7 @@ const evaluate = function evaluate(message){
 const checkPermissions = function checkPermissions(message, requiredPermissions){
 
 	//owner overrides everything
-	if(message.user.id === process.env.OWNER_ID){
+	if(message.author.id === process.env.OWNER_ID){
 		return true;
 	}
 

@@ -12,7 +12,8 @@
     "fs-extra":"",
     "winston":"",
     "node-wolfram":"",
-    "is-url":""
+    "is-url":"",
+    "fs-readdir-recursive":""
   },
   "engines": {
     "node": "8.x"

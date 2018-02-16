@@ -1,5 +1,7 @@
 const fs = require('fs');
 const isURL = require('is-url');
+const readDir = require('fs-readdir-recursive');
+
 const utils = require(__dirname  + '/utils.js');
 const logger = require(__dirname  + '/logger.js');
 
@@ -16,16 +18,21 @@ const isImage = function(url){
     return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
 
+const loadFolder = function(folder){
+  
+};
 
 const loadCommands = function(){
 	// directory();
   let commandList = {};
 	let files = fs.readdirSync(__dirname + '/commands/');
+  files = readDir(__dirname + '/commands/');
+  logger.info(files);
 	for(const file in files){
-		logger.info(files[file]);
     try{
       const command = require(__dirname + '/commands/' + files[file]);
       commandList[command['name'].toLowerCase()] = command;
+      logger.info(`loaded command: ${command['name'].toLowerCase()}`);
     }catch(err){
       logger.warn('could not load file:  ' + files[file]);
     }

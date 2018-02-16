@@ -7,7 +7,12 @@ const logger = require(__dirname  + '/logger.js');
 
 client.on('ready', () => {
 	logger.info(`Logged in as ${client.user.tag}!`);
+  try{
 	commands.loadCommands();
+  }catch(err){
+    logger.crit('error loading commands:');
+    logger.crit(err.stack);
+  }
 });
 
 client.on('message', (message) => {

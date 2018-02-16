@@ -38,16 +38,16 @@
 		"http://i.imgur.com/RVydzN9.jpg",
 		"https://cdn.discordapp.com/attachments/315458706961596417/404474615696719874/q3YyOfn.jpg",
 		"http://i.imgur.com/SOMVzbs.gif",
-		"http://i.imgur.com/QNNA4M2.gifv",
-		"http://i.imgur.com/qSejAy0.gifv",
-		"https://imgur.com/5Qqdep1",
+		"http://i.imgur.com/QNNA4M2.gif",
+		"http://i.imgur.com/qSejAy0.gif",
+		"https://i.imgur.com/5Qqdep1.gif",
 		"http://i.imgur.com/gmiJEbu.gif"
 	],
 	"loli": [
 		"https://i.redd.it/y7sekn2miqa01.jpg"
 	],
 	"lewd": [
-		"https://i.imgur.com/WbHmGTf.gifv",
+		"https://i.imgur.com/WbHmGTf.gif",
 		"https://68.media.tumblr.com/a3e9a6b37408b369945a5787350754dc/tumblr_n67ncwctsS1ryefclo1_1280.png",
 		"http://i0.kym-cdn.com/photos/images/original/000/932/422/4ad.gif",
 		"http://i0.kym-cdn.com/photos/images/original/000/932/436/42b.gif"
@@ -97,6 +97,7 @@
 	],
 	"puss": [
 		"puss",
+    "puss puss",
 		"https://pbs.twimg.com/profile_images/581133499689766913/JpAila-2.jpg"
 	],
 	"cuddle": [
@@ -108,5 +109,8 @@
 	],
 	"kanchosmug": [
 		"https://cdn.discordapp.com/emojis/412366889780510720.png"
+	],
+	"herchey": [
+		"https://lmgtfy.com/?q=gf"
 	]
 }

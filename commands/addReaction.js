@@ -1,4 +1,5 @@
 const utils = require(__dirname  + '/../utils.js');
+const logger = require(__dirname  + '/../logger.js');
 const addReactionCommand = function addReactionCommand(message){
 	//TODO prevent duplicates
 	//TODO allow direct image upload
@@ -25,7 +26,27 @@ const addReactionCommand = function addReactionCommand(message){
 		console.log(attachment.url);
 		count += 1;
 	}
-	for(let i = 2; i<args.length; i++){
+	for(let i = 2; i < args.length; i++){
+    //group words wrapped in "
+    if(args[i].startsWith('"')){
+      let str = "";
+      str += args[i].substr(1) + ' ';
+      i += 1;
+
+      while(!args[i].endsWith('"') && i < args.length){
+        str += args[i] + ' ';
+        i += 1;
+      }
+      
+      str += args[i].slice(0, args[i].length-1);;
+      i += 1;
+      
+      logger.info("str");
+      logger.info(str);
+      reactions[key].push(str);
+      count += 1;
+      continue;
+    }
 		reactions[key].push(args[i]);
 		console.log(args[i]);
 		count += 1;

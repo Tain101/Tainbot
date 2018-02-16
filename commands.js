@@ -12,6 +12,10 @@ global.prefix = '.';
 const prefix = global.prefix;
 
 
+const isImage = function(url){
+    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
+
 
 const loadCommands = function(){
 	// directory();
@@ -19,8 +23,12 @@ const loadCommands = function(){
 	let files = fs.readdirSync(__dirname + '/commands/');
 	for(const file in files){
 		logger.info(files[file]);
-		const command = require(__dirname + '/commands/' + files[file]);
-		commandList[command['name'].toLowerCase()] = command;
+    try{
+      const command = require(__dirname + '/commands/' + files[file]);
+      commandList[command['name'].toLowerCase()] = command;
+    }catch(err){
+      logger.warn('could not load file:  ' + files[file]);
+    }
 	}
   global.commandList = commandList;
   
@@ -52,11 +60,6 @@ const evaluate = function evaluate(message){
       }
     }
   }
-  
-  if(!command){
-		message.channel.send(`command does not exist, type ${global.prefix}help for available commands.`);
-		return;
-	}
 
 	const permissionsNeeded = command.requiredPermissions;
 	if(!checkPermissions(message, permissionsNeeded)) return;
@@ -121,7 +124,7 @@ const react = function replyFromList(message, list){
 
 	const replyText = utils.getRandomItem(list);
 	str += `${replyText}`;
-  if(isURL(str)){
+  if(isURL(str) && isImage(str)){
     const embed = {
       "color": message.channel.members.find('id', message.author.id).displayColor,
       "image": {

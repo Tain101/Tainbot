@@ -13,7 +13,9 @@
     "winston":"",
     "node-wolfram":"",
     "is-url":"",
-    "fs-readdir-recursive":""
+    "fs-readdir-recursive":"",
+    "chalk":"",
+    "clear":""
   },
   "engines": {
     "node": "8.x"

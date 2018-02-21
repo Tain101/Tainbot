@@ -1,5 +1,4 @@
 const Discord     = require('discord.js');
-var clear = require('clear');
 
 const client      = new Discord.Client({autoReconnect:true});
 
@@ -11,7 +10,6 @@ const logger = require(__dirname  + '/logger.js');
 
 
 client.on('ready', () => {
-  clear();
   logger.info(!!chalk.supportsColor.stdout);
 	logger.info(chalk.blue(`Logged in as ${client.user.tag}!`));
   try{

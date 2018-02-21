@@ -1,4 +1,34 @@
-var winston = require('winston');
+const winston = require('winston');
+require('winston-daily-rotate-file');
+ 
+const logger = {
+  infoLog: new winston.Logger({
+    levels: {
+      info: 0
+  },
+  transports: [
+    new winston.transports.DailyRotateFile({
+      
+    })
+  ]
+    
+  })
+};
+
+const transport = new (winston.transports.DailyRotateFile)({
+  filename: './log',
+  datePattern: 'yyyy-MM-dd.',
+  prepend: true,
+  level: process.env.ENV === 'development' ? 'debug' : 'info'
+});
+ 
+//   var logger = new (winston.Logger)({
+//     transports: [
+//       transport
+//     ]
+//   });
+ 
+  logger.info('Hello World!');
 
 // set default log level.
 var logLevel = 'info';
@@ -24,7 +54,7 @@ const myCustomLevels = {
 };
 
 const timestamp = () => (new Date()).toISOString();
-const logger = new (winston.Logger)({
+const loggyer = new (winston.Logger)({
 	level: logLevel,
 	levels: myCustomLevels.levels,
 	transports: [

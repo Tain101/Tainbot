@@ -3,6 +3,9 @@ const fs = require('fs-extra'); //filesystem
 const path = require('path');
 const logger = require(__dirname + '/logger.js');
 
+const checkUpdateFreq = 5*60*1000; //5 minutes
+const statUpdateFreq = 1000*60*1;
+
 const writeFile = function writeFile(filename, contents){
   fs.writeFileSync(filename, contents, "utf8");
 }
@@ -47,8 +50,16 @@ const writeJSON = function writeJSON(jsonFile, data){
     fs.writeFileSync(jsonFile, string, "utf8");
 }
 
+const checkUpdateIntervals = function checkUpdateIntervals(){
+  const now = new Date();
+  if(now.getUTCHours() === 11){
+    
+  }
+}
+
 module.exports.checkPermissions = checkPermissions;
 module.exports.getRandomItem    = getRandomItem;
 module.exports.writeFile        = writeFile;
 module.exports.readJSON         = readJSON;
 module.exports.writeJSON        = writeJSON;
+module.exports.checkUpdateIntervals        = checkUpdateIntervals;

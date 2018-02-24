@@ -1,88 +1,66 @@
 const winston = require('winston');
+const path    = require('path');
+const utils = require(__dirname  + '/utils.js');
 require('winston-daily-rotate-file');
- 
-const logger = {
-  infoLog: new winston.Logger({
-    levels: {
-      info: 0
+
+const logsDir     = path.join(__dirname, 'logs');
+const datePattern = path.normalize('/yyyy/MM/dd/');
+const bot         = global.bot;
+
+const template = {
+  dirname:     logsDir,
+  datePattern: datePattern,
+  localTime:   false,
+  prepend:     true,
+  maxDays:     15,
+  timestamp:   function(){
+    const now = new Date();
+    return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
   },
-  transports: [
-    new winston.transports.DailyRotateFile({
-      
-    })
-  ]
-    
-  })
+  formatter: function(options) {
+    return options.timestamp() + "[" + options.level[0] + "] " +
+      (options.message ? options.message : '') +
+      (options.meta && Object.keys(options.meta).length ? '\n\t'+
+      JSON.stringify(options.meta) : '' );
+  },
+  prettyPrint: true,
+  createTree:  true,
+  json:        false,
+  exitOnError: false
 };
 
-const transport = new (winston.transports.DailyRotateFile)({
-  filename: './log',
-  datePattern: 'yyyy-MM-dd.',
-  prepend: true,
-  level: process.env.ENV === 'development' ? 'debug' : 'info'
-});
- 
-//   var logger = new (winston.Logger)({
-//     transports: [
-//       transport
-//     ]
-//   });
- 
-  logger.info('Hello World!');
-
-// set default log level.
-var logLevel = 'info';
-
-// Set up logger
-const myCustomLevels = {
-	levels: {
-		fatal: 0,
-		crit: 1,
-		warn: 2,
-		info: 3,
-		debug: 4,
-		trace: 5
-	},
-	colors: {
-		trace: 'white',
-		debug: 'green',
-		info: 'blue',
-		warn: 'yellow',
-		crit: 'red',
-		fatal: 'red'
-	}
-};
-
-const timestamp = () => (new Date()).toISOString();
-const loggyer = new (winston.Logger)({
-	level: logLevel,
-	levels: myCustomLevels.levels,
-	transports: [
-		new (winston.transports.Console)({
-			timestamp,
-			level: 'info'
-		}),
-		new (winston.transports.File)({
-			filename: 'winston.log',
-			timestamp,
-			level: 'trace'
-		})
-	],
-	exceptionHandlers: [
-	new winston.transports.File({ filename: 'winstonException.log' })
-	]
+var logger = new (winston.Logger)({
+    exitOnError: false, //don't crash on exception
+    transports: [
+        new (winston.transports.Console)({
+          formatter: function(options) {
+            const now = new Date();
+            return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "[" + options.level[0] + "] " +
+              (options.message ? options.message : '') +
+              (options.meta && Object.keys(options.meta).length ? '\n\t'+
+              JSON.stringify(options.meta) : '' );
+        }}), //always use the console
+        new (winston.transports.DailyRotateFile)(Object.assign(template, { name: 'everything', filename: 'server.log' })), //log everything to the server.log
+        new (winston.transports.DailyRotateFile)(Object.assign(template, { name: 'error', level: 'error', filename: 'error.log', handleExceptions: true })), //log errors and exceptions to the error.log
+        new (winston.transports.DailyRotateFile)(Object.assign(template, { name: 'warn', level: 'warn', filename:'warn.log' })), //log warn to the warn.log
+        new (winston.transports.DailyRotateFile)(Object.assign(template, { name: 'info', level: 'info', filename:'info.log' })) //log info to the info.log
+    ]
 });
 
-winston.addColors(myCustomLevels);
+logger.on('logging', function (transport, level, msg, meta) {
+    // [msg] and [meta] have now been logged at [level] to [transport]
+  if(level === 'warn' || level === 'error'){
+    if(global.botLogger){
+      bot.log(level, msg, meta);
+    }
+    utils.writeJSON(logsDir + "lasterr", {transport: transport, level: level, msg:msg, meta:meta});
+  }
+});
+logger.on('error', function(error){
+  if(global.botLogger){
+      bot.log(error);
+    }
+    utils.writeJSON(logsDir + "lasterr", {error: error});
+});
 
-// LOGGER EXAMPLES
-	// var log = require('./log.js')
-	// logger.trace('trace');
-	// logger.debug('debug');
-	// logger.info('info');
-	// logger.warn('warn');
-	// logger.crit('crit');
-	// logger.fatal('fatal');
-
-
-	module.exports = logger;
+module.exports = logger;

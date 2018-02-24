@@ -6,9 +6,9 @@ const copyUser = function(user){
 };
 
 const printMessageInfo = function printMessageInfo(message){
-	// logger.info(message);
-  let str = message.content.split(' ')[1];
-  let user = message.client.fetchUser(str).then((user) => {logger.info(user); copyUser(user);});
+	logger.info(message);
+  // let str = message.content.split(' ')[1];
+  // let user = message.client.fetchUser(str).then((user) => {logger.info(user); copyUser(user);});
   // logger.info(user);
 }
 

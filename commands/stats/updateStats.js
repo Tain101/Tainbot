@@ -1,5 +1,10 @@
+const updateStats = function updateStats(){
+  
+  
+};
+
 exports.name                = 'updateStats';
 exports.aliasList           = [];
 exports.description         =  `TODO`,
-exports.call                = function(){};
+exports.call                = updateStats;
 exports.requiredPermissions = null;

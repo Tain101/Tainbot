@@ -38,7 +38,7 @@ const loadCommands = function(){
     }
 	}
   global.commandList = commandList;
-  
+  return commandList;
 };
 
 const evaluate = function evaluate(message){
@@ -144,5 +144,33 @@ const react = function replyFromList(message, list){
   }
 };
 
+const runCommand = function runCommand(commandName){
+  global.commandList = global.commandList || loadCommands();
+  
+  commandName = commandName.toLowerCase();
+  let command = global.commandList[commandName];
+  
+  //check for an alias
+	if(!command){
+    for(const com in global.commandList){
+      if(global.commandList[com].aliasList){
+        for(let i = 0; i < global.commandList[com].aliasList.length; i++){
+          if(global.commandList[com].aliasList[i].toLowerCase() === commandName){
+            command = global.commandList[com];
+          }
+        }
+      }
+    }
+  }
+  
+  try{
+	  command.call();
+  }catch(err){
+    logger.warn(`commands.runCommand()`);
+    logger.warn(err.stack);
+  }
+}
+
 module.exports.evaluate = evaluate;
 module.exports.loadCommands = loadCommands;
+module.exports.runCommand = runCommand;

@@ -10,7 +10,7 @@
     "express": "",
     "request":"",
     "fs-extra":"",
-    "winston":"",
+    "debug":"",
     "node-wolfram":""
   },
   "engines": {

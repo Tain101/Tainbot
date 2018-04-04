@@ -1,7 +1,8 @@
 //utils.js
 const fs = require('fs-extra'); //filesystem
 const path = require('path');
-const logger = require(__dirname + '/logger.js');
+// const logger = require(__dirname + '/logger.js');
+const log = require('debug')('utils.js');
 
 const writeFile = function writeFile(filename, contents){
   fs.writeFileSync(filename, contents, "utf8");

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const utils = require(__dirname  + '/utils.js');
-const logger = require(__dirname  + '/logger.js');
+// const logger = require(__dirname  + '/logger.js');
+const log = require('debug')('commands.js');
 // const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 
@@ -32,12 +33,8 @@ const evaluate = function evaluate(message){
 		react(message, reactions[key]);
 		return;
 	}
-	const command = commandList[key];
-	if(!command){
-		message.channel.say(`command does not exist, type ${global.prefix}help for available commands.`);
-		return;
-	}
 
+	const command = commandList[key];
 	const permissionsNeeded = command.requiredPermissions;
 	if(!checkPermissions(message, permissionsNeeded)) return;
 

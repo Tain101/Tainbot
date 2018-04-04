@@ -1,5 +1,6 @@
 // let wolfram = require('wolfram-alpha').createClient(process.env.WOLFRAM_APP_ID);
-const logger = require(__dirname + '/logger.js');
+// const logger = require(__dirname + '/logger.js');
+const log = require('debug')('wolfram.js');
 
 let Client = require('node-wolfram');
 let wolfram = new Client(process.env.WOLFRAM_APP_ID);
@@ -42,7 +43,7 @@ const wfQuery = function wfQuery(message){
               }
             }
           }
-        } 
+        }
       }
 
       if(result.queryresult.hasOwnProperty("assumptions")){

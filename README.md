@@ -1,3 +1,19 @@
+# Tainbot 2.0
+
+Personal discordbot rewrite with glitch.com in mind.
+
+- use github webhooks to allow dev on my own environment, then automatically updated to glitch.com
+
+- write testing (npm jest) as I develop. should be able to locally test before ever needing to push.
+
+- create a simple & functional logging system. (npm debug, winston, marcus, etc..) crashes need to be logged properly, and crash loops should be avoided. writing logs to files should be an option, but not required. along with daily logging etc.. logger should be able to print filename, method name, stack, etc.. as a way to make titles for different log threads. formatting should be easy peasy
+
+- adhere to airbnb styling etc.. project should be formatted before ever pushing.
+
+- format -> test -> push -> update
+
+- development is one directional. we should never be editing on glitch.com. consider the website production.
+
 # Glitch <> GitHub Sync
 
 Experimental two-way syncing between a Glitch project and a GitHub repo, using [git hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) and [githubhook](https://github.com/nlf/node-github-hook).

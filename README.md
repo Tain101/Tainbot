@@ -8,6 +8,8 @@ Personal discordbot rewrite with glitch.com in mind.
 
 - create a simple & functional logging system. (npm debug, winston, marcus, etc..) crashes need to be logged properly, and crash loops should be avoided. writing logs to files should be an option, but not required. along with daily logging etc.. logger should be able to print filename, method name, stack, etc.. as a way to make titles for different log threads. formatting should be easy peasy
 
+- - this should be it's own project. submitted to npm
+
 - adhere to airbnb styling etc.. project should be formatted before ever pushing.
 
 - format -> test -> push -> update

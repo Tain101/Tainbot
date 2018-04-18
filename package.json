@@ -1,11 +1,14 @@
 {
+
   "name": "Tainbot",
   "version": "0.0.1",
+
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+
     "discord.js": "",
     "express": "",
     "request":"",
@@ -15,5 +18,14 @@
   },
   "engines": {
     "node": "8.x"
-  }
+  },
+  "repository": {
+    "url": "https://github.com/garethx/glitch-github-sync"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "github"
+  ]
 }

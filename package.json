@@ -1,19 +1,28 @@
 {
+
   "name": "Tainbot",
+
   "version": "2.0.1",
   "description": "Personal discord bot, Glitch-GitHub sync using git hooks and githubhook",
+  "version": "0.0.1",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
-  },
-  "dependencies": {
-    "githubhook": "*"
   },
   "engines": {
     "node": "8.1.x"
   },
   "repository": {
-    "url": "https://github.com/Tain101/Tainbot"
+    "githubhook": "*",
+    "discord.js": "",
+    "express": "",
+    "request":"",
+    "fs-extra":"",
+    "debug":"",
+    "node-wolfram":""
+  },
+  "engines": {
+    "node": "8.x"
   },
   "license": "MIT",
   "keywords": [
@@ -22,3 +31,4 @@
     "github"
   ]
 }
+

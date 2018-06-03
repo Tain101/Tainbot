@@ -9,7 +9,7 @@ github.listen();
 
 github.on('push:glitch-github-sync', function (event, repo, ref, data) {
     console.log("Received a push from GitHub!");
-  
+
     var sys  = require('util'),
         exec = require('child_process').exec,
         child;
@@ -20,5 +20,7 @@ github.on('push:glitch-github-sync', function (event, repo, ref, data) {
         } else { // Script ran ok
           console.log("git.sh ran ok: ", stdout);
         }
-    });  
+
+    });
 });
+

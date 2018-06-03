@@ -1,2 +1,3 @@
 #!/bin/sh
-# git pull https://github.com/garethx/glitch-github-sync.git && refresh
+git pull https://github.com/Tain101/Tainbot.git && refresh
+

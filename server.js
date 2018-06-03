@@ -7,7 +7,7 @@ var github = githubhook({
 
 github.listen();
 
-github.on('push:glitch-github-sync', function (event, repo, ref, data) {
+github.on('push:Tainbot', function (event, repo, ref, data) {
     console.log("Received a push from GitHub!");
 
     var sys  = require('util'),
@@ -16,9 +16,9 @@ github.on('push:glitch-github-sync', function (event, repo, ref, data) {
 
     child = exec('sh git.sh', function (error, stdout, stderr){
         if (error){ // There was an error executing our script
-          console.err(error);
+          console.log(error);
         } else { // Script ran ok
-          console.log("git.sh ran ok: ", stdout);
+          console.log("git.sh ran ok: ", stdout, stderr);
         }
 
     });

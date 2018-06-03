@@ -2,7 +2,38 @@
 const fs = require('fs-extra'); //filesystem
 const path = require('path');
 // const logger = require(__dirname + '/logger.js');
-const log = require('debug')('utils.js');
+// const log = require('debug')('utils.js');
+
+const log = function logger(filename){
+	this.err = function(error){
+		return console.error(`${filename}:${error}`);
+	}
+	this.logger = function(message){
+		return console.log(`${filename}:${message}`);
+	}
+	return this.logger;
+};
+
+const req = function smartRequire(file) {
+		let err = false;
+		try{
+			return require(file);
+		} catch(e1){
+			// log('%O\n%s', e1, e1.stack.split('\n').slice(7).join('\n'));
+			err = e1;
+		}
+		try{
+			return require(join(global.rDir, file));
+		} catch(e2){
+			// log('%O\n%s', e2, e2.stack.split('\n').slice(7).join('\n'));
+			err = e2;
+		}
+
+		if(err){
+			console.error('%O\n%s', err, err.stack.split('\n').slice(7).join('\n'));
+			throw err;
+		}
+};
 
 const writeFile = function writeFile(filename, contents){
   fs.writeFileSync(filename, contents, "utf8");
@@ -22,12 +53,12 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
         return false;
     }
 
-    // logger.crit(requiredPermissions);
-    // logger.info(requiredPermissions);
+    // log.crit(requiredPermissions);
+    // log.info(requiredPermissions);
     try{
         return message.member.hasPermission(requiredPermissions, false, true, true);
     }catch(err){
-        return logger.info(err);
+        return log(err);
     }
 }
 
@@ -37,8 +68,8 @@ const readJSON = function readJSON(jsonFile){
     const data  = fs.readFileSync(jsonFile, "utf8");
     return JSON.parse(data);
   }catch(err){
-    logger.warn(`could not read jsonFile ${jsonFile}`);
-    logger.warn(`${err.stack}`);
+    log(`could not read jsonFile ${jsonFile}`);
+    log(`${err.stack}`);
   }
 
 }

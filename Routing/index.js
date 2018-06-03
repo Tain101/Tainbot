@@ -1,19 +1,17 @@
-const express = require('express');
-const app     = express();
-const request = require('request');
+const {req}		= require('utils.js');
 
-const utils = require(__dirname  + '/utils.js');
-const log   = require('debug')('routing.js');
-const error = require('debug')('routing.js:error');
-error.log   = console.error.bind(console);
+const log			= req('utils.js')('routing.js');
 
+const request	= req('request');
+const express	= req('express');
+const app			= express();
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+  response.send('online :)');
 });
 
 app.on("error", (error) => {

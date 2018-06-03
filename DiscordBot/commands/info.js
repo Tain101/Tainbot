@@ -1,3 +1,8 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('info.js');
+
 const printMessageInfo = function printMessageInfo(message){
 	logger.info(message);
 }

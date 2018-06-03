@@ -1,4 +1,9 @@
 // init project
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('githubhooks.js');
+
 const githubhook = require('githubhook');
 const github = githubhook({
   port: process.env.PORT,

@@ -1,3 +1,8 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('setGame.js');
+
 const setBotGame = function setBotGame(message){
 	const gameList = [
 	"Tetris or something",

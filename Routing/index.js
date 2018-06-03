@@ -1,6 +1,7 @@
-const {req}		= require('utils.js');
+const utils	  = require(global.rDir + '/utils.js');
 
-const log			= req('utils.js')('routing.js');
+const req			= utils.req;
+const log     = utils.log('roiuting.js');
 
 const request	= req('request');
 const express	= req('express');

@@ -1,3 +1,8 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('addReaction.js');
+
 const addReactionCommand = function addReactionCommand(message){
 	//TODO prevent duplicates
 	//TODO allow direct image upload

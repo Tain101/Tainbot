@@ -1,7 +1,12 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('commands.js');
+
 const fs = require('fs');
-const utils = require(__dirname  + '/utils.js');
+// const utils = require(__dirname  + '/utils.js');
 // const logger = require(__dirname  + '/logger.js');
-const log = require('debug')('commands.js');
+// const log = require('debug')('commands.js');
 // const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 

@@ -1,3 +1,8 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('help.js');
+
 const helpCommand = function helpCommand(message){
 	let embed = {
 		"title": "Available Commands:",

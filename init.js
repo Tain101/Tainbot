@@ -3,8 +3,11 @@
  *
  * sets global variables & turns on debuggers.
  */
+const utils	  = require(global.rDir + '/utils.js');
 
-const log = require('debug')('init');
+const req			= utils.req;
+const log     = utils.log('main.js');
+
 const { join } = require('path');
 
 const init = function init() {

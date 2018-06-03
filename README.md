@@ -1,6 +1,6 @@
 # Tainbot 2.0 #
 
-test push master 2
+test push master 3
 
 Personal discordbot rewrite with glitch.com in mind.
 

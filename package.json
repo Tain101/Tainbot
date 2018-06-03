@@ -5,9 +5,9 @@
   "description": "Personal discord bot, Glitch-GitHub sync using git hooks and githubhook",
   "version": "0.0.1",
 
-  "main": "server.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node main.js"
   },
   "dependencies": {
     "githubhook": "*",

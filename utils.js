@@ -1,17 +1,15 @@
 //utils.js
 const fs = require('fs-extra'); //filesystem
 const path = require('path');
+const {join} = require('path');
 // const logger = require(__dirname + '/logger.js');
 // const log = require('debug')('utils.js');
 
-const log = function logger(filename){
-	this.err = function(error){
-		return console.error(`${filename}:${error}`);
-	}
-	this.logger = function(message){
-		return console.log(`${filename}:${message}`);
-	}
-	return this.logger;
+const log = function logger(namespace){
+	const logger = require('debug')(namespace);
+	logger.enabled = true;
+	logger.log = console.log.bind(console);
+	return logger;
 };
 
 const req = function smartRequire(file) {
@@ -84,3 +82,5 @@ module.exports.getRandomItem    = getRandomItem;
 module.exports.writeFile        = writeFile;
 module.exports.readJSON         = readJSON;
 module.exports.writeJSON        = writeJSON;
+module.exports.log        = log;
+module.exports.req        = req;

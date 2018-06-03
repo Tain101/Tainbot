@@ -1,8 +1,7 @@
 //staying online thanks to uptimerobot.com
 //handles requests and displays homepage so that uptimerrobot.com correctly displays 'online' status
-global.rDir = __dirname;
-const {log, req} = require('./utils');
+require('./init')();
 
-req('/Routing');
-req('/DiscordBot');
-req('/GitHubHooks');
+require('/Routing');
+require('/DiscordBot');
+require('/GitHubHooks');

@@ -1,5 +1,6 @@
 # Tainbot 2.0
 
+test push
 Personal discordbot rewrite with glitch.com in mind.
 
 - use github webhooks to allow dev on my own environment, then automatically updated to glitch.com

@@ -5,7 +5,7 @@ const log     = utils.log('DiscordBot');
 
 const Discord  = require('discord.js');
 const client   = new Discord.Client({autoReconnect:true});
-const commands = require(__dirname  + '/commands.js');
+const commandHandler = require(__dirname  + '/commands');
 // const utils    = require(__dirname  + '/utils.js');
 // const log      = require('debug')('discordBot.js');
 // const error    = require('debug')('discordBot.js:error');
@@ -14,12 +14,12 @@ const commands = require(__dirname  + '/commands.js');
 
 client.on('ready', () => {
 	log(`Logged in as ${client.user.tag}!`);
-	const commandCount = commands.loadCommands();
+	const commandCount = commandHandler.loadCommands();
 	log(`loaded ${commandCount} commands!`);
 });
 
 client.on('message', (message) => {
-	commands.evaluate(message);
+	commandHandler.evaluate(message);
 });
 
 client.on('disconnected', function botDiscFunc() {

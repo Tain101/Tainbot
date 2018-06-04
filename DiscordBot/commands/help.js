@@ -28,7 +28,7 @@ const helpCommand = function helpCommand(message){
 }
 
 exports.name                = 'help';
-exports.aliasList           = [];
-exports.description         =  `You're lookin' at it.`,
-exports.call                = queryWolfram;
+exports.aliasList           = ['h', 'halp'];
+exports.description         = 'You\'re lookin\' at it.',
+exports.call                = helpCommand;
 exports.requiredPermissions = null;

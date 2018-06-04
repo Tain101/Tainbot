@@ -1,7 +1,12 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('commands.js');
+
 const fs = require('fs');
-const utils = require(__dirname  + '/utils.js');
+// const utils = require(__dirname  + '/utils.js');
 // const logger = require(__dirname  + '/logger.js');
-const log = require('debug')('commands.js');
+// const log = require('debug')('commands.js');
 // const commands  = require(__dirname  + '/commandList.js');
 global.reactions = utils.readJSON(__dirname  + '/reactions.json');
 
@@ -16,7 +21,7 @@ const loadCommands = function(){
 	// directory();
 	let files = fs.readdirSync(__dirname + '/commands/');
 	for(const file in files){
-		logger.info(files[file]);
+		log(files[file]);
 		const command = require(__dirname + '/commands/' + files[file]);
 		commandList[command.name] = command;
 	}
@@ -28,7 +33,7 @@ const evaluate = function evaluate(message){
 
 	//key is the first word of the message, without the prefix character
 	const key = message.content.split(' ')[0].slice(prefix.length).toLowerCase();
-	let reactions = global.reactions;
+	let reactions = global.reactions || [];
 	if(reactions[key]){
 		react(message, reactions[key]);
 		return;

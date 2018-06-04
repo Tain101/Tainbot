@@ -1,3 +1,8 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('help.js');
+
 const helpCommand = function helpCommand(message){
 	let embed = {
 		"title": "Available Commands:",
@@ -5,11 +10,11 @@ const helpCommand = function helpCommand(message){
 		'fields': []
 	};
 
-	for (const command in commandList){
-		if(utils.checkPermissions(message, commandList[command].requiredPermissions)){
-			embed.fields.push({'name': command, 'value': commandList[command].description});
-		}
-	}
+	// for (const command in commandList){
+	// 	if(utils.checkPermissions(message, commandList[command].requiredPermissions)){
+	// 		embed.fields.push({'name': command, 'value': commandList[command].description});
+	// 	}
+	// }
 	message.reply('', {embed});
 
 	embed.title = 'Reactions';
@@ -25,5 +30,5 @@ const helpCommand = function helpCommand(message){
 exports.name                = 'help';
 exports.aliasList           = [];
 exports.description         =  `You're lookin' at it.`,
-exports.call                = queryWolfram;
+// exports.call                = queryWolfram;
 exports.requiredPermissions = null;

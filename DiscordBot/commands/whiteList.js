@@ -1,3 +1,8 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('whiteList.js');
+
 const whiteListUser = function whiteListUser(message){
 	//TODO
 };

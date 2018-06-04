@@ -1,23 +1,22 @@
-const express = require('express');
-const app     = express();
-const request = require('request');
+const utils	  = require(global.rDir + '/utils.js');
 
-const utils = require(__dirname  + '/utils.js');
-const log   = require('debug')('routing.js');
-const error = require('debug')('routing.js:error');
-error.log   = console.error.bind(console);
+const req			= utils.req;
+const log     = utils.log('routing.js');
 
+const request	= req('request');
+const express	= req('express');
+const app			= express();
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+  response.sendFile(__dirname + '/index.html');
 });
 
 app.on("error", (error) => {
-  error("routing.js:\n" + error);
+  // error("routing.js:\n" + error);
   // utils.writeFile( __dirname + `/.data/logs/${Date.now()}Routing.txt`, error);
 });
 
@@ -28,3 +27,9 @@ let listener = app.listen(process.env.PORT, function () {
   log('Your app is listening on port ' + listener.address().port);
 });
 
+
+
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/", function (request, response) {
+  
+});

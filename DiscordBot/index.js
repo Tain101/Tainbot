@@ -1,10 +1,15 @@
+const utils	  = require(global.rDir + '/utils.js');
+
+const req			= utils.req;
+const log     = utils.log('DiscordBot');
+
 const Discord  = require('discord.js');
 const client   = new Discord.Client({autoReconnect:true});
 const commands = require(__dirname  + '/commands.js');
-const utils    = require(__dirname  + '/utils.js');
-const log      = require('debug')('discordBot.js');
-const error    = require('debug')('discordBot.js:error');
-error.log      = console.error.bind(console);
+// const utils    = require(__dirname  + '/utils.js');
+// const log      = require('debug')('discordBot.js');
+// const error    = require('debug')('discordBot.js:error');
+// error.log      = console.error.bind(console);
 
 
 client.on('ready', () => {

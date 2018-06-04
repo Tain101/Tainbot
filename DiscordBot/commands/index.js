@@ -19,10 +19,10 @@ let commandList = {};
 
 const loadCommands = function(){
 	// directory();
-	let files = fs.readdirSync(__dirname + '/commands/');
+	let files = fs.readdirSync(__dirname);
 	for(const file in files){
-		logger.info(files[file]);
-		const command = require(__dirname + '/commands/' + files[file]);
+		log(files[file]);
+		const command = require(__dirname + '/' + files[file]);
 		commandList[command.name] = command;
 	}
 };
@@ -76,7 +76,7 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
 	try{
 		return message.member.hasPermission(requiredPermissions, false, false, false);
 	}catch(err){
-		logger.warn("error" + err);
+		log("error" + err);
 		return false;
 
 	}
@@ -89,7 +89,7 @@ const react = function replyFromList(message, list){
 	if(mentionList.length){
 		for(const user in mentionList){
 			str += `${mentionList[user]} `;
-			logger.info(`${mentionList[user]}`);
+			log(`${mentionList[user]}`);
 		}
 	}else{
 		//if nobody is mentioned reply to the author

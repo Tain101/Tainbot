@@ -3,7 +3,7 @@
  *
  * sets global variables & turns on debuggers.
  */
-const utils	  = require(global.rDir + '/utils.js');
+const utils	  = require('./utils.js');
 
 const req			= utils.req;
 const log     = utils.log('main.js');
@@ -11,6 +11,7 @@ const log     = utils.log('main.js');
 const { join } = require('path');
 
 const init = function init() {
+	try{require('./ignore.js')}catch(e){};
 	/* eslint-disable */
 	global.rDir = __dirname;
 	global.req = function(file) {

@@ -1,10 +1,7 @@
 {
-
   "name": "Tainbot-2",
-
   "description": "Personal discord bot, Glitch-GitHub sync using git hooks and githubhook",
   "version": "0.0.1",
-
   "main": "main.js",
   "scripts": {
     "start": "node main.js"
@@ -13,10 +10,10 @@
     "githubhook": "*",
     "discord.js": "",
     "express": "",
-    "request":"",
-    "fs-extra":"",
-    "debug":"",
-    "node-wolfram":""
+    "request": "",
+    "fs-extra": "",
+    "debug": "",
+    "node-wolfram": ""
   },
   "engines": {
     "node": "8.x"
@@ -27,5 +24,4 @@
     "glitch",
     "github"
   ]
-
 }

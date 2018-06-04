@@ -16,9 +16,9 @@ github.listen();
 github.on('push:Tainbot', function (event, repo, ref, data) {
     console.log("Received a push from GitHub!");
 
-    const sys  = require('util'),
-        exec = require('child_process').exec,
-        child;
+    const sys  = require('util');
+		const exec = require('child_process').exec;
+   	let child;
 
     child = exec('sh git.sh', function (error, stdout, stderr){
         if (error){ // There was an error executing our script

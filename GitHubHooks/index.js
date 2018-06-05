@@ -6,7 +6,7 @@ const log     = utils.log('githubhooks.js');
 
 const githubhook = require('githubhook');
 const github = githubhook({
-  port: process.env.PORT,
+  port: process.env.PORT + 1,
   secret: process.env.GITHUB_WEBHOOK_SECRET
 });
 

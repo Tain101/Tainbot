@@ -2,3 +2,4 @@ logs/
 node_modules/
 .git-credentials
 ignore.js
+test-*

@@ -13,7 +13,8 @@
     "request": "",
     "fs-extra": "",
     "debug": "",
-    "node-wolfram": ""
+    "node-wolfram": "",
+    "json-stringify-safe": "*"
   },
   "engines": {
     "node": "8.x"

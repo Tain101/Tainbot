@@ -6,20 +6,42 @@ const log     = utils.log('DiscordBot');
 const Discord  = require('discord.js');
 const client   = new Discord.Client({autoReconnect:true});
 const commandHandler = require(__dirname  + '/commands');
-// const utils    = require(__dirname  + '/utils.js');
-// const log      = require('debug')('discordBot.js');
-// const error    = require('debug')('discordBot.js:error');
-// error.log      = console.error.bind(console);
+const reactionHandler = require(__dirname  + '/reactions');
 
+const parseMessage = function parseMessage(message){
+	let messageObject = message;
+	log('\tParseMessage');
+	const prefix = '.';
+	if(!message.content.startsWith(prefix)
+		|| message.author.bot){
+		return false;
+	}
+	// const messageObject = {
+	// 	author: message.author,
+	// 	key: message.content.split(' ')[0].slice(prefix.length).toLowerCase(),
+	// };
+	messageObject.key = message.content.split(' ')[0].slice(prefix.length).toLowerCase();
+	return messageObject;
+}
 
 client.on('ready', () => {
 	log(`Logged in as ${client.user.tag}!`);
-	const commandCount = commandHandler.loadCommands();
+	const commandCount = commandHandler.commandList.length;
 	log(`loaded ${commandCount} commands!`);
+	// log('loaded: %o', reactionHandler.reactionList);
 });
 
 client.on('message', (message) => {
-	commandHandler.evaluate(message);
+	log('OnMessage');
+	const messageObject = parseMessage(message);
+	if(!messageObject){
+		return messageObject;
+	}
+
+	return commandHandler.evaluate(messageObject)
+			|| reactionHandler.evaluate(messageObject)
+			|| evaluateMeta(messageObject);
+
 });
 
 client.on('disconnected', function botDiscFunc() {
@@ -44,4 +66,4 @@ process.on('uncaughtException', function (err) {
 		// client.sent('kill')
 	}
 	process.exit()
-})
+});

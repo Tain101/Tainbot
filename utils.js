@@ -2,6 +2,7 @@
 const fs = require('fs-extra'); //filesystem
 const path = require('path');
 const {join} = require('path');
+const stringify = require('json-stringify-safe');
 // const logger = require(__dirname + '/logger.js');
 // const log = require('debug')('utils.js');
 
@@ -60,20 +61,25 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
     }
 }
 
-const readJSON = function readJSON(jsonFile){
-
+const readJSON = async function readJSON(jsonFile){
+	console.log('reading file: %o', jsonFile);
   try{
-    const data  = fs.readFileSync(jsonFile, "utf8");
-    return JSON.parse(data);
+    const data  = await fs.readFileSync(jsonFile, "utf8");
+    console.log('parsing data');
+    const parsed = await JSON.parse(data);
+    console.log('data parsed!');
+    return parsed;
+    // console.log(data);
+    // return await JSON.parse(data);
   }catch(err){
-    log(`could not read jsonFile ${jsonFile}`);
-    log(`${err.stack}`);
+    console.log(`could not read jsonFile ${jsonFile}`);
+    console.log(`${err.stack}`);
   }
 
 }
 
 const writeJSON = function writeJSON(jsonFile, data){
-    const string = JSON.stringify(data, undefined, '\t');
+    const string = stringify(data, undefined, '\t');
     fs.writeFileSync(jsonFile, string, "utf8");
 }
 

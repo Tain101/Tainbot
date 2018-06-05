@@ -3,11 +3,17 @@ const utils	  = require(global.rDir + '/utils.js');
 const req			= utils.req;
 const log     = utils.log('whiteList.js');
 
-const whiteListUser = function whiteListUser(message){
-	//TODO
-};
+const exportFunction  = (function() {
+	const whiteListUser = function(message){
+		log('exec');
+		//todo
+	}
 
-exports.name        = `whitelist`;
-exports.aliasList   = ['wl', 'white', 'enable'];
-exports.description = `allows user to use a command`;
-exports.call        = whiteListUser;
+	whiteListUser.aliasList           = ['wl', 'white', 'enable'];
+	whiteListUser.description         = 'TODO: //allows user to use a command';
+	whiteListUser.requiredPermissions = 'ADMINISTRATOR';
+
+	return whiteListUser;
+})();
+
+module.exports = exportFunction;

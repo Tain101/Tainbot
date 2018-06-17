@@ -10,12 +10,18 @@ const exportFunction  = (function() {
 		log('exec');
 		let words = message.content.split(' ');
 		let reaction = words[1];
-		let entries = words[2];
+		let entry = words[2];
+		log('removing entry: %s , from:%s', entry, reaction);
 		reactionHandler.removeReactionEntry(reaction, entry);
-		message.reply(reactionHandler.getReactionEntries(reaction).map((item) => { return '<' + item + '>'}));
+		log('done removing', entry);
+		const newList = reactionHandler.getReactionEntries(reaction);
+		log(newList);
+
+		// message.reply(reactionHandler.getReactionEntries(reaction).map((item) => { return '<' + item + '>'}));
+		message.reply(newList.map((item) => { return '<' + item + '>'}));
 	}
 
-	removeReaction.aliasList           = ['remR', 'remReact'];
+	removeReaction.aliasList           = ['remr', 'remreact'];
 	removeReaction.description         = `removes a reaction from the list`;
 	removeReaction.requiredPermissions = 'ADMINISTRATOR';
 

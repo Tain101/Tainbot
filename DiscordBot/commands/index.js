@@ -66,13 +66,22 @@ const checkPermissions = function checkPermissions(message, requiredPermissions)
 
 class CommandHandler {
 	constructor(){
-		this.commandList	= this.loadCommands();
-		this.aliasList		= this.loadAliasList();
+		this.loading = true;
+		this.load();
+
+
 	}
 
-	loadCommands(){
+	async load(){
+		this.commandList	= await this.loadCommands();
+		this.aliasList		= await this.loadAliasList();
+		this.loading = false;
+		log("this.commandList: %O", this.commandList);
+	}
+
+	async loadCommands(){
 		log('loading commands')
-		let files = fs.readdirSync(__dirname);
+		let files = await fs.readdirSync(__dirname);
 		let commands = {};
 		for(const file in files){
 			if(files[file] === 'index.js'){
@@ -80,7 +89,7 @@ class CommandHandler {
 			}
 			log(files[file]);
 			const command = require(__dirname + '/' + files[file]);
-			commands[command.name] = command;
+			commands[command.name.toLowerCase()] = command;
 		}
 		log(Object.keys(commands));
 		log('\tdoneloading comamnds!');
@@ -96,11 +105,11 @@ class CommandHandler {
 			const command = this.commandList[key];
 			for(let j = 0; j < command.aliasList.length; j++){
 				const alias = command.aliasList[j];
-				aliasList[alias] = command;
+				aliasList[alias.toLowerCase()] = command;
 			}
 		}
 		log(Object.keys(aliasList));
-		log('\tdoneloading comamnds!');
+		log('\tdoneloading alias!');
 		return aliasList;
 	}
 

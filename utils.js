@@ -40,7 +40,8 @@ const writeFile = function writeFile(filename, contents){
 
 
 const getRandomItem = function getRandomItem(list){
-    return list[Math.floor(Math.random() * list.length)];
+	if(!list) return false;
+  return list[Math.floor(Math.random() * list.length)];
 };
 
 const checkPermissions = function checkPermissions(message, requiredPermissions){
@@ -78,9 +79,11 @@ const readJSON = async function readJSON(jsonFile){
 
 }
 
-const writeJSON = function writeJSON(jsonFile, data){
-    const string = stringify(data, undefined, '\t');
-    fs.writeFileSync(jsonFile, string, "utf8");
+const writeJSON = async function writeJSON(jsonFile, data){
+	log('writing to JSONfile: %s', jsonFile);
+  const string = stringify(data, undefined, '\t');
+  await fs.writeFileSync(jsonFile, string, "utf8");
+  log('done writing');
 }
 
 module.exports.checkPermissions = checkPermissions;

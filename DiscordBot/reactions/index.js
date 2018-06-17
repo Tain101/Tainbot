@@ -10,6 +10,8 @@ const log     = utils.log('reactions.js');
 class ReactionHandler {
 	constructor(){
 		this.reactionList = [];
+
+		this.dirName = require('path').join(__dirname, 'reactions.json');
 		this.loadReactions();
 		// log(this.reactionList);
 	}
@@ -17,7 +19,7 @@ class ReactionHandler {
 	async loadReactions(){
 		log('loading reactions');
 		let reactionList;
-		reactionList = await utils.readJSON(require('path').join(__dirname, 'reactions.json'));
+		reactionList = await utils.readJSON(this.dirName);
 		log("%o", Object.keys(reactionList));
 		log(Object.keys(reactionList).length);
 		log('reactions loaded!');
@@ -32,29 +34,33 @@ class ReactionHandler {
 		return reaction;
 	}
 
-	updateReactionList(){
-		utils.writeJSON('./reactions.json', this.reactionList);
+	async updateReactionList(){
+		log('updateReactionList');
+		await utils.writeJSON(this.dirName, this.reactionList);
+		this.loadReactions();
 	}
 
 	createReaction(reaction) {
 		this.reactionList[reaction] = [];
-		updateReactionList();
+		this.updateReactionList();
 	}
 
 	deleteReaction(reaction) {
 		this.reactionList[reaction] = null;
-		updateReactionList();
+		this.updateReactionList();
 	}
 
-	addReactionEntry(reaction, entry) {
+	async addReactionEntry(reaction, entry) {
+		log('addReactionEntry');
 		const r = this.reactionList[reaction] || this.createReaction(reaction);
 		r.push(entry);
-		updateReactionList();
+		await this.updateReactionList();
 	}
 
-	addReactionEntries(reaction, entries) {
+	async addReactionEntries(reaction, entries) {
+		log('addReactionEntries');
 		for(let i = 0; i < entries.length; i++){
-			this.addReactionEntry(reaction, entry[i]);
+			await this.addReactionEntry(reaction, entries[i]);
 		}
 	}
 
@@ -63,9 +69,16 @@ class ReactionHandler {
 	}
 
 	removeReactionEntry(reaction, entry) {
-		const r = this.reactionList[reaction];
-		this.reactionList[reaction] = null;
-		updateReactionList();
+		const rEntryList = this.getReactionEntries(reaction);
+		const index = rEntryList.indexOf(entry);
+		log('rEntryList:%O', rEntryList);
+		log('index:%O', index);
+		log('rEntryList[index]:%O', rEntryList[index]);
+		if (index > -1) {
+		  rEntryList.splice(index, 1);
+		}
+
+		this.updateReactionList();
 	}
 
 	getReaction(reaction){

@@ -1,11 +1,16 @@
-const utils	  = require(global.rDir + '/utils.js');
+const utils						= require(global.rDir + '/utils.js');
 
-const req			= utils.req;
-const log     = utils.log('help.js');
+const req							= utils.req;
+const log							= utils.log('help.js');
+const commandHandler = req('DiscordBot/commands');
+// const commandHandler = require(__dirname  + '/commands');
 
 const exportFunction  = (function() {
-	const help = function(message, commandList){
+	const help = function(message){
 		log('exec');
+		log(commandHandler);
+		log(commandHandler.commandList);
+		commandList = commandHandler.commandList;
 		let embed = {
 			"title": "Available Commands:",
 			"color": 7729478,
